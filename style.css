@@ -1,0 +1,74 @@
+body {
+	background-color: #f1f1f1;
+}
+
+.login-box {
+	background-color: #ffffff;
+	max-width: 450px;
+	margin: auto;
+	margin-top: 100px;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	text-align: center;
+}
+
+h1 {
+	font-size: 32px;
+	margin-bottom: 20px;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+label {
+	font-size: 18px;
+	margin-top: 20px;
+	display: block;
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	border-radius: 5px;
+	border: none;
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+select {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	border-radius: 5px;
+	border: none;
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+input[type="submit"] {
+	background-color: #008CBA;
+	color: #ffffff;
+	padding: 10px 20px;
+	border-radius: 5px;
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+}
+
+input[type="submit"]:hover {
+	background-color: #004257;
+}
+
+.form-container form .error-msg{
+	margin: 10px 0;
+	display: block;
+	background: crimson;
+	color: #ffffff;
+	border-radius: 5px;
+	font-size: 20px;
+}
