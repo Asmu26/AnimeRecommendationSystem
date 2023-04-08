@@ -1,0 +1,125 @@
+body {
+    font-family: "Roboto Mono", monospace;
+    text-align: center;
+    background-image: url("https://images4.alphacoders.com/976/thumb-1920-976013.jpg");
+    background-color: #000000;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+  }
+  
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  figure > img {
+    margin: 0 8px;
+    width: 150px;
+  }
+  
+  img {
+    max-height: 250px;
+  }
+  .animg {
+    height: 240px;
+  }
+  body > p {
+    display: inline;
+    margin-left: -150px;
+  }
+  .animg {
+    border: 4px double #3e707a;
+    cursor: pointer;
+    box-shadow: 9px 8px 7px -7px rgba(0, 0, 0, 0.89);
+  }
+  
+  .animg:hover {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    box-shadow: 0px 0px 8px 1px #000;
+  }
+  .title-anime {
+    z-index: 9999;
+    color: white;
+  }
+  .figura {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
+  figcaption {
+    background: rgba(6, 10, 19, 0.35);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    width: 160px;
+    margin-left: 8px;
+  }
+  .add {
+    background: rgba(0, 236, 25, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    width: 350px;
+    height: auto;
+    padding: 7px;
+  }
+  
+  label {
+    display: block;
+    color: white;
+    padding: 2px;
+  }
+  input {
+    width: 300px;
+    border-radius: 20px;
+  }
+  input::placeholder {
+    color: black;
+  }
+  button {
+    margin: 10px;
+    font-weight: bold;
+    color: black;
+  }
+  
+  button:hover{
+    background: black;
+    color: green;
+  }
+  
+  .result {
+    color: red;
+    padding: 0;
+    margin-left: -10px;
+  }
+  
+  a{
+    margin: 0;
+    padding: 0;
+  }
+  
+  .mark{
+    font-size: 1.5em;
+    text-shadow: 
+    /*3d layers*/
+    0px 0px 1px rgb(252, 0, 255),
+    0px 1px 1px rgb(252, 0, 255),
+    0px 2px 1px rgb(252, 0, 255),
+    0px 0px 1px rgb(252, 0, 255),
+    0px 1px 1px rgb(252, 0, 255),
+    0px 2px 1px rgb(252, 0, 255),
+    2px 2px 1px rgb(252, 0, 255),
+    0px 1px 1px rgb(252, 0, 255),
+    0px 2px 1px rgb(252, 0, 255);
+    color: white;
+  }  
