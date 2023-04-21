@@ -1,0 +1,40 @@
+{% load static %} <!-- Load the static files, such as CSS and JavaScript -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Signup</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> <!-- Link to the CSS file -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Link to the Font Awesome CSS file -->
+	<style type="text/css">
+	body { <!-- Style for the background -->
+		font-family: "Roboto Mono", monospace;  <!-- Font style for the text -->
+		text-align: center; <!-- Text alignment for the content in the body -->
+		background-image: url("https://wallpapercave.com/wp/wp9454034.jpg");
+		background-color: #000000; <!-- Background color for the page -->
+		background-size: cover; <!-- Set the size of the background image to cover the whole page -->
+		background-position: center top; <!-- Set the position of the background image to center top -->
+		background-repeat: no-repeat; <!-- Set the background image to not repeat -->
+	}
+	</style>
+</head>
+<body>
+	
+	<div class="login-box"> <!-- Create a login box -->
+		<h1>Sign Up</h1> <!-- Create a title for the sign up page -->
+		<form method="POST" action=""> <!-- Create a form with the POST method and no action -->
+			{% csrf_token %} <!-- Add a Cross-Site Request Forgery (CSRF) token to the form for security reasons -->
+			
+			<label for="name">Username</label> <!-- Add a label for the username input field -->
+			<input type="text" id="username" name="username" placeholder="Enter your name"required> <!-- Create an input field for the username and add a placeholder and set it to be required -->
+			<label for="email">Email</label> <!-- Add a label for the email input field -->
+			<input type="email" id="email" name="email" placeholder="Enter your email"required> <!-- Create an input field for the email and add a placeholder and set it to be required -->
+			<label for="password">Password</label> <!-- Add a label for the password input field -->
+			<input type="password" id="pass1" name="pass1" placeholder="Enter your password"required> <!-- Create an input field for the password and add a placeholder and set it to be required -->
+			<input type="password" id="pass2" name="pass2" placeholder="Confirm your password"required> <!-- Create another input field for the password to confirm and add a placeholder and set it to be required -->
+			<input type="submit" value="signup"> <!-- Create a submit button with the value "signup" -->
+			<p class="text-center">already have an account? <a href="{% url 'login' %}">Login </a></p> <!-- Add a message with a link to the login page -->
+		</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,297 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>VinSmoke</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+  <style>
+    body {
+        font-family: "Roboto Mono", monospace;
+        text-align: center;
+        background-image: url("https://images4.alphacoders.com/976/thumb-1920-976013.jpg");
+        background-color: #000000;
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+      }
+      
+      
+    .anime-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        overflow-x: hidden;
+        text-align: center;
+        flex-direction: row;
+    }
+    .anime-card {
+        width: 220px;
+        margin: 1.8rem;
+        border-radius: 3px;
+        box-shadow: 0.2px 4px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+      }
+    .anime-card:hover {
+        -webkit-transform: scale(1);
+        transform: scale(1.06);
+        cursor: pointer;
+    }
+
+    .anime-card img {
+        width: 100%;
+        height: 250px;
+        filter: blur(0.5px);
+    }
+
+    .anime-card img {
+        -webkit-transform: scale(1.05);
+        transform: scale(1.05);
+        -webkit-transition: .3s ease-in-out;
+        transition: .3s ease-in-out;
+    }
+
+    .anime-con {
+        color: black;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem;
+
+        
+        letter-spacing: 0.5px;
+        font-size: 12px;
+        margin-bottom: 20px;
+    }
+
+    .anime-con h2 {
+       
+        margin-left: 10px;
+        margin-right: 10px;
+        
+    }
+
+    .score {
+        background-color: white;
+        font-weight: 900;
+        font-size: 14px;
+        color: #d3ad7f;
+        margin-bottom: 14px;
+        margin-right: 18px;
+        
+    }
+    .score{
+        position: absolute; 
+        bottom: 0;
+        right: 0;
+    }
+    
+    footer {
+        background-color: #f5f5f5;
+        padding: 40px 0;
+        font-size: 14px;
+    }
+
+    .footer-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-left {
+      width: 30%;
+      margin-bottom: 20px;
+    }
+
+    .footer-left h3 {
+      margin-bottom: 10px;
+    }
+
+    .footer-center {
+      width: 40%;
+      margin-bottom: 20px;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .social-icons a {
+      color: #888;
+      font-size: 18px;
+      transition: color 0.2s ease-in-out;
+    }
+
+    .social-icons a:hover {
+      color: #222;
+    }
+
+    .footer-right {
+      width: 20%;
+      margin-bottom: 20px;
+    }
+
+    .footer-right h3 {
+      margin-bottom: 10px;
+    }
+
+    .footer-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #888;
+      transition: color 0.2s ease-in-out;
+    }
+
+    .footer-links a:hover {
+      color: #222;
+    }
+
+      #nav {
+
+        margin-right: 700px;
+      }
+  #navicon{
+    margin-right: 150px;
+  }
+  
+</style>
+</head>
+<body>
+
+  <div class="nav">
+    <div class="nav-header">
+      <div class="nav-title">
+        <strong>VinSmoke</strong>
+      </div>
+    </div>
+     
+        <span></span>
+        <span></span>
+        <span></span>
+    
+    <div  class="nav-links">
+      <a href="{% url 'landing' %}" >Home</a>
+      <a href="#">Popular</a>
+      <a  href="#">WatchList</a>
+      <a id="nav" href="#">Trending</a>
+      <p><a href="{% url 'login' %}"><b>Login</b></a></p>
+      <p><a href="{% url 'signup' %}"><b>signup</b></a></p>
+    </div>
+  </div>
+<!---->
+
+<div class="anime-container">
+  {% for anime in all_anime %}
+      <!-- loop through all anime and create a div for each one -->
+      <div class="anime-card">
+          <!-- display the anime image and title -->
+          <img src="{{ anime.img_url }}" alt="{{ anime.title }}">
+          <div class="anime-con"> 
+              <h2>{{ anime.title }}</h2>
+              {% comment %} 
+                  create a comment block for a link to the anime detail page
+                  using the url() method to generate the URL with the anime ID
+              {% endcomment %}
+          </div>
+          <!-- display the anime score -->
+          <p>Score: {{ anime.score }}</p>
+      </div>
+  {% endfor %}
+</div>
+<!-- create a pagination div with links to first, previous, next, and last pages -->
+<div class="pagination">
+  <span class="step-links">
+      {% if all_anime.has_previous %}
+          <!-- link to the first page and previous page -->
+          <a class="page1" href="?page=1">&laquo; first</a>  
+          <a class="page1" href="?page={{ all_anime.previous_page_number }}">previous</a>
+      {% endif %}
+      <!-- display the current page and total number of pages -->
+      <span class="current-page">
+          Page {{ all_anime.number }} of {{ all_anime.paginator.num_pages }}
+      </span>
+      {% if all_anime.has_next %}
+          <!-- link to the next page and last page -->
+          <a class="page1" href="?page={{ all_anime.next_page_number }}">next</a>
+          <a class="page1" href="?page={{ all_anime.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+<style>
+  .step-links a {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: #4b0082;
+    margin: 0 5px;
+  }
+  
+  .step-links a:hover {
+    background-color: #8a2be2;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .previous_page_number{
+    color:white;
+  }
+  
+  .current-page {
+    margin: 0 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+  }  
+  
+</style>
+{% load static %}
+
+  <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+  <footer>
+    <div class="footer-container">
+      <div class="footer-left">
+        <h3>VinSmoke</h3>
+        <p>Anime Recommendation System</p>
+      </div>
+      <div class="footer-center">
+        <h3>Connect With Us</h3>
+        <div class="social-icons">
+          <a href="https://www.instagram.com/asmitta_07/"><i class="fab fa-instagram"></i></a>
+          <a href="https://twitter.com/AsmitaB86070756"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.reddit.com/user/Scarlett077"><i class="fab fa-reddit"></i></a>
+          <a href="https://www.facebook.com/asmita.bhattarai.1257"><i class="fab fa-facebook"></i></a>
+          <a href="https://discord.gg/pt2Rqzm9"><i class="fab fa-discord"></i></a>
+        </div>
+      </div>
+      <div class="footer-right">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="{% url 'landing' %}">Home</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>

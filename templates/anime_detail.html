@@ -1,0 +1,89 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>VinSmoke</title>
+    <link rel="stylesheet" href="{% static 'css/details.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+   
+</head>
+
+	  
+<body>
+    {% include "nav.html" %}
+    <h1>{{ anime.title }}</h1>
+    <div>
+        <img src="{{ anime.img_url }}" alt="{{ anime.title }}">
+    </div>
+   <div> <a href="#" class="watch-now-btn">Watch Now</a>
+   </div>
+    <div>
+    <p>{{ anime.synopsis }}</p>
+    <!----></div>
+    <div class="text-container">
+        <p>Genre: {{ anime.genre }}</p>
+        <p>Aired: {{ anime.aired }}</p>
+        <p>Episodes: {{ anime.episodes }}</p>
+        
+    <!-- {%for episode in episodes%}
+        <li>{{episode}}</li>
+        {%endfor%} -->
+        <p>Popularity: {{ anime.popularity }}</p>
+        <p>Ranked: {{ anime.ranked }}</p>
+        <p>Score: {{ anime.score }}</p> </div>
+   <script>
+    function show_status(){
+        let status = document.getElementById('status');
+        status.innerHTML = `
+        <button onclick="add_watchlist('Completed',{{anime.id}})">Completed</button>
+    <button onclick="add_watchlist('Dropped',{{anime.id}}
+    )">Dropped</button>
+    <button onclick="add_watchlist('Plan to Watch',{{anime.id}})">Plan to Watch</button>
+    <button onclick="add_watchlist('On Hold',{{anime.id}})">On Hold</button>
+    <button onclick="add_watchlist('Watching',{{anime.id}})">Watching</button>
+                            `;
+    }
+
+    function add_watchlist(status,id){
+    const csrftoken = getCookie('csrftoken'); // Get the CSRF token from cookies
+    const url = '/add-watchlist';
+    console.log(status,id)
+    // Send a POST request to the server with the data
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({
+            'id': id,
+            'status': status,
+        }),
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Watchlist item added successfully!');
+        } else {
+            console.error('Failed to add watchlist item:', response.statusText);
+        }
+    })
+    .catch(error => {
+        console.error('Failed to add watchlist item:', error);
+    });
+}
+
+// Helper function to get the value of a cookie
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+   </script>
+<!--Recommendation part -->
+
+</body>
+<footer>
+    {% include "footer.html" %}  
+</footer>
+</html>

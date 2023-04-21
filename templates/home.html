@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Luffytaro</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="static/css/nav.css">
+  <link rel="stylesheet" type="text/css" href="back.css">
+</head>
+<body>
+  <script>
+    function checkSessionId() {
+      var sessionId = getCookie("sessionid");
+      console.log("sessionId is empty: " + (sessionId == ""));
+      console.log("sessionId value: " + sessionId);
+    
+      {% comment %} if (sessionId == "") {
+        window.location.href = '/landing';
+      } else {
+        window.location.href = '/aap';
+      } {% endcomment %}
+    }
+    
+    function getCookie(cookieName) {
+      var cookies = document.cookiex;
+      console.log(cookies);
+      {% comment %} for (var i = 0; i < cookies.length; i++) {
+        var parts = cookies[i].split('=');
+        if (parts[0] === cookieName) {
+          return parts[1];
+        }
+      }
+      return ''; {% endcomment %}
+    }
+    
+    window.onload = function() {
+      {% comment %} checkSessionId(); {% endcomment %}
+    };
+  
+  </script>
+</body>
+</html>
