@@ -1,0 +1,85 @@
+/* Defines the styling for the footer element */
+footer {
+  background-color: #E0B0FF;
+  padding: 40px 0;
+  font-size: 14px;
+  bottom: 0;
+  }
+  
+  /* Defines a container for the footer content with a maximum width of 1200px, centered on the page and arranged as a flexbox with space between and wrapping enabled */
+  .footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  }
+  
+  /* Defines the left section of the footer, taking up 30% of the width of the footer-container and with a bottom margin of 20px */
+  .footer-left {
+  width: 30%;
+  margin-bottom: 20px;
+  }
+  
+  /* Defines a bottom margin for the h3 element inside the footer-left section */
+  .footer-left h3 {
+  margin-bottom: 10px;
+  }
+  
+  /* Defines the center section of the footer, taking up 40% of the width of the footer-container and with a bottom margin of 20px */
+  .footer-center {
+  width: 40%;
+  margin-bottom: 20px;
+  }
+  
+  /* Defines a container for the social media icons, arranged as a flexbox with space between and with a top margin of 10px */
+  .social-icons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  }
+  
+  /* Defines the styling for the social media icons, including the color, font size, and transition effects */
+  .social-icons a {
+  color: #363636;
+  font-size: 18px;
+  transition: color 0.2s ease-in-out;
+  }
+  
+  /* Defines the hover state for the social media icons, changing the color on hover */
+  .social-icons a:hover {
+  color: #222;
+  }
+  
+  /* Defines the right section of the footer, taking up 20% of the width of the footer-container and with a bottom margin of 20px */
+  .footer-right {
+  width: 20%;
+  margin-bottom: 20px;
+  }
+  
+  /* Defines a bottom margin for the h3 element inside the footer-right section */
+  .footer-right h3 {
+  margin-bottom: 10px;
+  }
+  
+  /* Defines the styling for the footer links list, removing the default list styling and padding */
+  .footer-links {
+  list-style: none;
+  padding: 0;
+  }
+  
+  /* Defines a bottom margin for each list item in the footer links list */
+  .footer-links li {
+  margin-bottom: 10px;
+  }
+  
+  /* Defines the styling for the footer links, including the color and transition effects */
+  .footer-links a {
+  color: #363636;
+  transition: color 0.2s ease-in-out;
+  }
+  
+  /* Defines the hover state for the footer links, changing the color on hover */
+  .footer-links a:hover {
+  color: #222;
+  }

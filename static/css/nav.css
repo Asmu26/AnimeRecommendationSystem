@@ -1,0 +1,222 @@
+/* Set default box-sizing, margin, and padding for all elements */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Set font family for body text */
+body {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Style the navigation bar */
+.nav {
+  position: sticky; /* use sticky positioning */
+  z-index: 1;
+  top: 0; /* position at the top */
+  height: 50px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* Style the navigation bar title */
+.nav-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #EE82EE;
+}
+
+/* Style the navigation bar links */
+.nav-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Style each individual navigation bar link */
+.nav-links a {
+  display: block;
+  padding: 13px 10px;
+  text-decoration: none;
+  color: #efefef;
+}
+
+/* Style the hover effect for navigation bar links */
+.nav-links a:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Hide the navigation bar button on larger screens */
+.nav-btn {
+  display: none;
+}
+
+/* Set media query for screens smaller than 600px */
+@media (max-width: 600px) {
+
+  /* Show the navigation bar button */
+  .nav-btn {
+    display: block;
+  }
+
+  /* Style the navigation bar button */
+  .nav-btn > label {
+    display: block;
+    width: 50px;
+    height: 50px;
+    padding: 13px;
+    cursor: pointer;
+  }
+
+  /* Style the hover effect for the navigation bar button */
+  .nav-btn > label:hover, #nav-check:checked ~ .nav-btn > label {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  /* Style the lines in the navigation bar button */
+  .nav-btn > label > span {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background-color: #eee;
+    margin-top: 8px;
+  }
+/* Position the navigation bar links */
+.nav-links {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  height: 0;
+  background-color: #333;
+  overflow: hidden;
+  transition: height 0.3s ease-in;
+}
+
+/* Show the navigation bar links when the button is checked */
+#nav-check:checked ~ .nav-links {
+  height: calc(100vh - 50px);
+  overflow-y: auto;
+}
+
+/* Style the individual navigation bar links for smaller screens */
+.nav-links a {
+  display: block;
+  padding: 13px 10px;
+  color: #efefef;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+}
+
+#nav {
+  
+  margin-right: 700px;
+}
+#navicon{
+  margin-right: 150px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+position: relative;
+display: inline-block;
+}
+
+/* Style the profile icon in the dropdown menu */
+.profile-icon {
+display: inline-block;
+color: #fff;
+text-decoration: none;
+padding: 10px;
+margin-right: 150px;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+display: none;
+position: absolute;
+background-color: #f9f9f9;
+min-width: 160px;
+box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+color: black;
+padding: 12px 16px;
+text-decoration: none;
+display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .profile-icon {
+background-color: #3e8e41;
+}
+
+.fa-bell {
+  color: #efefef;
+  display: inline-block;
+  margin-left: 5px;
+  padding: 5px;
+  
+}
+
+.badge {
+  background-color: #ff4136;
+  font-size: 10px;
+  position: absolute;
+  top: 0;
+  padding: 2px 5px;
+  border-radius: 50%;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  min-width: 300px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  display: none; /* hide the dropdown by default */
+}
+
+
+[data-toggle="tooltip"]:hover + .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.dropdown-menu li {
+  margin-bottom: 10px;
+}
+
+.dropdown-menu li strong {
+  font-weight: bold;
+}
+
+.dropdown-menu li small {
+  color: #888;
+}
