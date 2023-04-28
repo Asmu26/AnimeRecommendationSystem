@@ -1,0 +1,16 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<form class="search-bar" method="GET" action="{% url 'reco' %}">
+    <input type="text" name="query" placeholder="Search...">
+    <button type="submit"><i class="fa fa-search"></i></button>
+  </form>
+  <h1>Similar Anime Recommendations</h1>
+  {% if similar_anime %}
+      <ul>
+      {% for anime in similar_anime %}
+          <li>{{ anime.title }}</li>
+      {% endfor %}
+      </ul>
+  {% else %}
+      <p>No similar anime found for given anime title.</p>
+  {% endif %}

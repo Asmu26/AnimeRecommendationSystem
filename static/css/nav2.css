@@ -1,0 +1,112 @@
+/* Set default box-sizing, margin, and padding for all elements */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Set font family for body text */
+  body {
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  /* Style the navigation bar */
+  .nav2 {
+    position: sticky; /* use sticky positioning */
+    z-index: 1;
+    top: 0; /* position at the top */
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  
+  
+  /* Style the navigation bar links */
+  .nav-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Style each individual navigation bar link */
+  .nav-links a {
+    display: block;
+    padding: 13px 10px;
+    text-decoration: none;
+    color: #efefef;
+  }
+  
+  /* Style the hover effect for navigation bar links */
+  .nav-links a:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #efefef;
+  }
+  
+  /* Hide the navigation bar button on larger screens */
+  .nav-btn {
+    display: none;
+  }
+  
+  /* Set media query for screens smaller than 600px */
+  @media (max-width: 600px) {
+  
+    /* Show the navigation bar button */
+    .nav-btn {
+      display: block;
+    }
+  
+    /* Style the navigation bar button */
+    .nav-btn > label {
+      display: block;
+      width: 50px;
+      height: 50px;
+      padding: 13px;
+      cursor: pointer;
+    }
+  
+    /* Style the hover effect for the navigation bar button */
+    .nav-btn > label:hover, #nav-check:checked ~ .nav-btn > label {
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  
+    /* Style the lines in the navigation bar button */
+    .nav-btn > label > span {
+      display: block;
+      width: 25px;
+      height: 2px;
+      background-color: #eee;
+      margin-top: 8px;
+    }
+  /* Position the navigation bar links */
+  .nav-links {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background-color: #333;
+    overflow: hidden;
+    transition: height 0.3s ease-in;
+  }
+  
+  /* Show the navigation bar links when the button is checked */
+  #nav-check:checked ~ .nav-links {
+    height: calc(100vh - 50px);
+    overflow-y: auto;
+  }
+  
+  /* Style the individual navigation bar links for smaller screens */
+  .nav-links a {
+    display: block;
+    padding: 13px 10px;
+    color: #efefef;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  }
+
+  

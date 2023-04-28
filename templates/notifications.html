@@ -1,0 +1,15 @@
+{% block content %}
+  <div class="notifications">
+    {% if notification_list %}
+      {% for notification in notification_list %}
+        <div class="notification">
+          <h4>{{ notification.title }}</h4>
+          <p>{{ notification.description }}</p>
+          <hr>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>You have no new notifications.</p>
+    {% endif %}
+  </div>
+{% endblock %}
