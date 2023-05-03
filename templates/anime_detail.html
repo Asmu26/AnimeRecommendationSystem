@@ -6,72 +6,105 @@
 	<title>VinSmoke</title>
     <link rel="stylesheet" href="{% static 'css/details.css' %}">
     <link rel="stylesheet" href="{% static 'css/nav.css' %}">
-   
 </head>
-
-	  
 <body>
     {% include "nav.html" %}
-    <h1>{{ anime.title }}</h1>
-    <div>
-        <img src="{{ anime.img_url }}" alt="{{ anime.title }}">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <img src="{{ anime.img_url }}" alt="{{ anime.title }}"style="max-width: 100%">
+            </div>
+            <div class="col-md-6">
+                <h1>{{ anime.title }}</h1>
+                <div class="synopsis-container">
+                    <p>{{ anime.synopsis }}</p>
+                </div>
+                
+                {% if watchlist %}
+                    <a href="#" class="fas fa-edit">Edit Watch List</a>
+                {% else %}
+                <i class="fas fa-plus" onclick="show_status()"> Add to List
+                    <span id="status"></span>
+                </i> 
+                {% endif %}
+                <a href="#" class="fas fa-play">Watch Now</a>
+            </div>
+            <div class="col-md-3">
+                <div class="text-container">
+                    <p>Genre: {{ anime.genre }}</p>
+                    <p>Aired: {{ anime.aired }}</p>
+                    <p>Episodes: {{ anime.episodes }}</p>
+                    <p>Popularity: {{ anime.popularity }}</p>
+                    <p>Ranked: {{ anime.ranked }}</p>
+                    <p>Score: {{ anime.score }}</p> 
+                </div>
+            </div>
+        </div>
     </div>
-   <div> <a href="#" class="watch-now-btn">Watch Now</a>
-   </div>
-    <div>
-    <p>{{ anime.synopsis }}</p>
-    <!----></div>
-    <div class="text-container">
-        <p>Genre: {{ anime.genre }}</p>
-        <p>Aired: {{ anime.aired }}</p>
-        <p>Episodes: {{ anime.episodes }}</p>
-        
-    <!-- {%for episode in episodes%}
-        <li>{{episode}}</li>
-        {%endfor%} -->
-        <p>Popularity: {{ anime.popularity }}</p>
-        <p>Ranked: {{ anime.ranked }}</p>
-        <p>Score: {{ anime.score }}</p> </div>
-   <script>
+    <h2>Rating</h2>
+    <div class="rating-container">
+        <input type="radio" name="rating" id="rating-5">
+        <label for="rating-5" class="fas fa-star"></label>
+        <input type="radio" name="rating" id="rating-4">
+        <label for="rating-4" class="fas fa-star"></label>
+        <input type="radio" name="rating" id="rating-3">
+        <label for="rating-3" class="fas fa-star"></label>
+        <input type="radio" name="rating" id="rating-2">
+        <label for="rating-2" class="fas fa-star"></label>
+        <input type="radio" name="rating" id="rating-1">
+        <label for="rating-1" class="fas fa-star"></label>
+    </div>
+</body>
+</html>
+<!-- {%for episode in episodes%}
+            <li>{{episode}}</li>
+            {%endfor%} -->
+<script>
     function show_status(){
         let status = document.getElementById('status');
-        status.innerHTML = `
-        <button onclick="add_watchlist('Completed',{{anime.id}})">Completed</button>
-    <button onclick="add_watchlist('Dropped',{{anime.id}}
-    )">Dropped</button>
-    <button onclick="add_watchlist('Plan to Watch',{{anime.id}})">Plan to Watch</button>
-    <button onclick="add_watchlist('On Hold',{{anime.id}})">On Hold</button>
-    <button onclick="add_watchlist('Watching',{{anime.id}})">Watching</button>
-                            `;
-    }
-
-    function add_watchlist(status,id){
-    const csrftoken = getCookie('csrftoken'); // Get the CSRF token from cookies
-    const url = '/add-watchlist';
-    console.log(status,id)
-    // Send a POST request to the server with the data
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-        },
-        body: JSON.stringify({
-            'id': id,
-            'status': status,
-        }),
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('Watchlist item added successfully!');
-        } else {
-            console.error('Failed to add watchlist item:', response.statusText);
+        if (status.innerHTML === ''){
+            status.innerHTML = `
+                <button onclick="add_watchlist('completed',{{anime.id}})">Completed</button>
+                <button onclick="add_watchlist('dropped',{{anime.id}})">Dropped</button>
+                <button onclick="add_watchlist('plan_to_watch',{{anime.id}})">Plan to Watch</button>
+                <button onclick="add_watchlist('on_hold',{{anime.id}})">On Hold</button>
+                <button onclick="add_watchlist('watching',{{anime.id}})">Watching</button>
+            `;
         }
-    })
-    .catch(error => {
-        console.error('Failed to add watchlist item:', error);
-    });
-}
+        else{
+            status.innerHTML = '';
+        }
+    }
+    
+
+    function add_watchlist(status, id){
+        const csrftoken = getCookie('csrftoken');
+        const url = '/add-watchlist';
+        console.log(status, id);
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                'id': id,
+                'status': status,
+            }),
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Watchlist item added/updated successfully!');
+                // Reload the page to reflect the updated watchlist status
+                location.reload();
+            } else {
+                console.error('Failed to add/update watchlist item:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('Failed to add/update watchlist item:', error);
+        });
+    }
 
 // Helper function to get the value of a cookie
 function getCookie(name) {
@@ -80,10 +113,93 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
    </script>
+   <script>
+    const ratingContainer = document.querySelector(".rating-container");
+    const ratingForm = document.querySelector("#rating-form");
+    const ratingInput = document.querySelector("#rating-input");
+    const submitButton = document.querySelector("#submit-rating");
+    
+    // Disable the submit button until a rating is selected
+    submitButton.disabled = true;
+    
+    // Add event listener to enable the submit button when a rating is selected
+    ratingInput.addEventListener("input", () => {
+      submitButton.disabled = false;
+    });
+    
+    // Add event listener to submit the rating form on submission
+    ratingForm.addEventListener("submit", event => {
+      // Prevent the form from submitting
+      event.preventDefault();
+    
+      // Get the selected rating value
+      const rating = ratingInput.value;
+    
+      // Send an AJAX request to submit the rating
+      const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+      const animeId = ratingForm.dataset.animeId;
+      const url = `/submit_rating/${animeId}/${rating}/`;
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Update the average rating on the page
+          const averageRating = data.average_rating;
+          const averageRatingElement = document.querySelector("#average-rating");
+          if (averageRatingElement) {
+            averageRatingElement.textContent = `Average rating: ${averageRating.toFixed(1)}`;
+          }
+    
+          // Update the star ratings on the page
+          const fullStars = Math.round(averageRating);
+          const emptyStars = 5 - fullStars;
+          ratingContainer.innerHTML = "";
+          for (let i = 0; i < fullStars; i++) {
+            ratingContainer.innerHTML += '<i class="fas fa-star"></i>';
+          }
+          for (let i = 0; i < emptyStars; i++) {
+            ratingContainer.innerHTML += '<i class="far fa-star"></i>';
+          }
+    
+          // Disable the submit button
+          submitButton.disabled = true;
+    
+          // Show a success message
+          alert("Rating submitted successfully!");
+        })
+        .catch(error => {
+          console.error(error);
+          alert("An error occurred while submitting the rating. Please try again later.");
+    
+          // Enable the submit button
+          submitButton.disabled = false;
+        });
+    });
+    
+   </script>
 <!--Recommendation part -->
-
-</body>
-<footer>
+<div class="recommendations-container">
+    <h2>Recommended Anime</h2>
+    <div class="anime-container">
+      {% for anime in recommendations %}
+      <div class="anime-card">
+        <a href="{% url 'anime_detail' anime.id %}">
+        <img src="{{ anime.img_url }}" alt="{{ anime.title }}"></a> {% comment %} Link to the anime detail page {% endcomment %}
+        </a>
+        <div class="anime-con"> 
+          <h2>{{ anime.title }}</h2>
+        </div>
+    </div>
+      {% endfor %}
+    </div>
+</div>
+  <footer>
     {% include "footer.html" %}  
-</footer>
-</html>
+  </footer>
+  </html>
+  

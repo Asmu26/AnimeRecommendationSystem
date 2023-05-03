@@ -52,8 +52,6 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0.5rem;
-
-    
     letter-spacing: 0.5px;
     font-size: 12px;
     margin-bottom: 20px;
@@ -63,7 +61,7 @@ body {
    
     margin-left: 10px;
     margin-right: 10px;
-    
+    font-size: 20px;
 }
 
 .score {
@@ -94,6 +92,7 @@ body {
 
 .step-links a:hover {
   background-color: #8a2be2;
+  color: #ffffff;
 }
 
 

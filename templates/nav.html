@@ -1,6 +1,16 @@
 {% load static %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<!-- include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- include bootstrap JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
 <div class="nav">
     <div class="nav-header">
       <div class="nav-title">
@@ -12,86 +22,71 @@
         <span></span>
         <span></span>
     
-<div class="nav-links">
-          <a href="{% url 'aap' %}" >Home</a>
-          <a href="#" >Popular</a>
-          <a href="#" >WatchList</a>
-          <a id="nav" href="#" >Trending</a>
-          <a id="navicon" href="#"><i class="fa fa-bell"></i></a>
-          
-          <form class="search-bar" action="{% url 'aap' %}" method="GET">
-            <input type="text" name="query" placeholder="Search...">
-            <button type="submit"><i class="fa fa-search"></i></button>
-          </form>          
-        </div>
-          <div class="dropdown">
-            <a href="#" class="profile-icon"><i class="fa fa-user"></i></a>
-            <div class="dropdown-content">
-              <a href="#">Profile</a>
-              <a href="{% url 'add_watchlist' %}">WatchList</a>
-              <a href="{% url 'logout' %}">Logout</a>
-            </div>
+    <div class="nav-links">
+      <a href="{% url 'aap' %}" >Home</a>
+      <a href="#" >Popular</a>
+      <a href="/watchlist/" >WatchList</a>
+      <a id="nav" href="#" >Trending</a>
+          {% comment %} <a id="navicon" href="#"><i class="fa fa-bell"></i></a> {% endcomment %}
+      <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-bell"></i>
+          {% if count %}
+          <span class="badge badge-danger">{{ count }}</span>
+          {% endif %}
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsDropdown">
+        {% if notifications %}
+        <ul class="list-group">
+            {% for notification in notifications %}
+            <li class="list-group-item">
+                <strong>{{ notification.title }}</strong>
+                <p>{{ notification.description }}</p>
+                <small>{{ notification.timestamp }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="dropdown-item">You have no notifications.</p>
+        {% endif %}
+      </div>
+      <script>
+        jQuery(function () {
+            jQuery('[data-toggle="dropdown"]').dropdown({
+                container: 'body',
+                html: true,
+                title: function () {
+                    return jQuery('#notificationsDropdown').html();
+                }
+            }).on('click', function(){
+                jQuery.ajax({
+                    url: '{% url "notification-seen" %}',
+                    method: 'POST',
+                    data: {'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    success: function(response){
+                        console.log(response);
+                    },
+                    error: function(xhr){
+                        console.log(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+
+    <form class="search-bar" action="{% url 'aap' %}" method="GET">
+      <input type="text" name="query" placeholder="Search...">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>          
+    </div>
+
+    <div class="dropdown">
+      <a href="#" class="profile-icon"><i class="fa fa-user"></i></a>
+      <div class="dropdown-content">
+        <a href="#">Profile</a>
+        <a href="/watchlist/">WatchList</a>
+        <a href="{% url 'logout' %}">Logout</a>
           </div>
         </div>
-        
+      </div>   
   </div> 
-  
-  <style>
-    #nav {
-  
-      margin-right: 700px;
-    }
-    #navicon{
-      margin-right: 150px;
-    }
-    
-/* The container <div> - needed to position the dropdown content */
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Style the profile icon in the dropdown menu */
-  .profile-icon {
-    display: inline-block;
-    
-    color: #fff;
-    text-decoration: none;
-    padding: 10px;
-    margin-right: 150px;
-  }
-  
-  /* Dropdown Content (Hidden by Default) */
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-  
-  /* Links inside the dropdown */
-  .dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-  }
-  
-  /* Change color of dropdown links on hover */
-  .dropdown-content a:hover {background-color: #f1f1f1}
-  
-  /* Show the dropdown menu on hover */
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-  
-  /* Change the background color of the dropdown button when the dropdown content is shown */
-  .dropdown:hover .profile-icon {
-    background-color: #3e8e41;
-  }
-  
-  
-  </style>
   

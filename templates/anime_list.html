@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>VinSmoke</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+  <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'css/anime_list.css' %}">
+  
+  
+</head>
+<body>
+  {% include "nav.html" %}
+  <form id="genre-form">
+      <label for="genre">Select a genre:</label>
+      <select id="genre" name="genre">
+          {% for genre in genres %}
+              <option value="{{ genre.0 }}" {% if selected_genre == genre.0 %}selected{% endif %}>{{ genre.1 }}</option>
+          {% endfor %}
+      </select>
+  </form>
+
+  {% if anime %}
+      <div class="anime-container">
+       
+          {% for a in anime %}
+              <div class="anime-card">
+                  <img src="{{ a.img_url }}" alt="{{ a.title }}">
+                  <div class="anime-info">
+                      <h2>{{ a.title }}</h2>
+                      <a href="{{ a.link }}" target="_blank">Watch Now</a>
+                  </div>
+              </div>
+          {% endfor %}
+      </div>
+  {% else %}
+      <p>No anime found.</p>
+  {% endif %}
+      <script>
+        const genreSelect = document.querySelector('#genre');
+        const animeCards = document.querySelectorAll('.anime-card');
+        
+        genreSelect.addEventListener('change', () => {
+          const selectedGenre = genreSelect.value.toLowerCase();
+          animeCards.forEach(card => {
+            if (selectedGenre === '' || card.innerHTML.toLowerCase().includes(selectedGenre)) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      </script>
+
+    <footer>
+    {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}
+    </footer>

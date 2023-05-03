@@ -17,7 +17,7 @@ body {
   top: 0; /* position at the top */
   height: 50px;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color:#301934;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,8 +27,9 @@ body {
 /* Style the navigation bar title */
 .nav-title {
   font-size: 22px;
+  margin-right: 50px;
   font-weight: 900;
-  color: #EE82EE;
+  color: palevioletred;
 }
 
 /* Style the navigation bar links */
@@ -49,6 +50,7 @@ body {
 /* Style the hover effect for navigation bar links */
 .nav-links a:hover {
   background-color: rgba(0, 0, 0, 0.3);
+  color: #efefef;
 }
 
 /* Hide the navigation bar button on larger screens */
@@ -156,7 +158,11 @@ display: block;
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+  color: black;
+}
+
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
@@ -165,7 +171,8 @@ display: block;
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .profile-icon {
-background-color: #3e8e41;
+background-color: #cb8080;
+color: #fff;
 }
 
 .fa-bell {

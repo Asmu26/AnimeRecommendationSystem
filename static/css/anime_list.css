@@ -1,0 +1,95 @@
+body {
+    font-family: "Roboto Mono", monospace;
+    text-align: center;
+    background-image: url("https://images4.alphacoders.com/976/thumb-1920-976013.jpg");
+    background-color: #000000;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+  }
+
+
+select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .anime-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow-x: hidden;
+    text-align: center;
+    flex-direction: row;
+  }
+  .anime-card {
+    width: 220px;
+    margin: 1.8rem;
+    border-radius: 3px;
+    box-shadow: 0.2px 4px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+  }
+  .anime-card:hover {
+    -webkit-transform: scale(1);
+    transform: scale(1.06);
+    cursor: pointer;
+  }
+  
+  .anime-card img {
+    width: 100%;
+    height: 250px;
+    filter: blur(0.5px);
+  }
+  
+  .anime-card img {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+    -webkit-transition: .3s ease-in-out;
+    transition: .3s ease-in-out;
+  }
+  
+  .anime-con {
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .anime-con h2 {
+   
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 20px;
+  }
+  
+  .score {
+    background-color: white;
+    font-weight: 900;
+    font-size: 14px;
+    color: #d3ad7f;
+    margin-bottom: 14px;
+    margin-right: 18px;
+    
+  }
+  .score{
+    position: absolute; 
+    bottom: 0;
+    right: 0;
+  }
+  

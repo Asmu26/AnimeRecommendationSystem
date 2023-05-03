@@ -1,0 +1,24 @@
+@login_required(login_url='/login/')
+def edit_watchlist(request, watchlist_id):
+    # Get the watchlist object with the given ID
+    try:
+        watchlist = WatchList.objects.get(id=watchlist_id)
+    except WatchList.DoesNotExist:
+        return HttpResponse("Watchlist item not found.", status=404)
+    
+    # Check if the user is the owner of the watchlist item
+    if watchlist.user != request.user:
+        return HttpResponse("You are not authorized to edit this watchlist item.", status=403)
+    
+    if request.method == 'POST':
+        # Parse the new status from the POST request
+        new_status = request.POST.get('status')
+        
+        # Update the watchlist object with the new status
+        watchlist.status = new_status
+        watchlist.save()
+        
+        return redirect('watchlist', watchlist_id=watchlist_id)
+    
+    # If the request method is GET, render the edit watchlist template
+    return render(request, 'edit_watchlist.html', {'watchlist': watchlist})
