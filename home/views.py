@@ -41,11 +41,12 @@ def recommend(genre, title):
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
         sim_scores = sim_scores[1:11]
         anime_indices = [i[0] for i in sim_scores]
-        similar_anime = df[['title', 'id']].iloc[anime_indices]
+        similar_anime = df[['title', 'id','img_url']].iloc[anime_indices]
         similar_anime_dict = similar_anime.to_dict('records')
         return similar_anime_dict
 
     similar_anime_dict = get_recommendations(cosine_sim, data, title)
+    print(similar_anime_dict)
     return similar_anime_dict
 
 
@@ -214,6 +215,9 @@ def watchlists(request,anime_id):
     except Animedata.DoesNotExist:
         return HttpResponse("Anime not found.", status=404)
     
+    # Get the current user
+    user = request.user
+
      # Check if the anime is already in the user's watchlist
     try:
         watchlists = WatchList.objects.get(user=user,anime=anime)
@@ -229,31 +233,14 @@ def watchlists(request,anime_id):
     return render(request, 'watchlist_all.html', {"watchlists":watchlists})
 
 @login_required(login_url='/login/')
-def edit_watchlist(request, watchlist_id):
-    # Get the watchlist object with the given ID
-    try:
-        watchlist = WatchList.objects.get(id=watchlist_id)
-    except WatchList.DoesNotExist:
-        return HttpResponse("Watchlist item not found.", status=404)
-    
-    # Check if the user is the owner of the watchlist item
-    if watchlist.user != request.user:
-        return HttpResponse("You are not authorized to edit this watchlist item.", status=403)
-    
-    if request.method == 'POST':
-        # Parse the new status from the POST request
-        new_status = request.POST.get('status')
-        
-        # Update the watchlist object with the new status
-        watchlist.status = new_status
-        watchlist.save()
-        
-        return redirect('watchlists', anime_id=watchlist.anime.id)
-    
-    # If the request method is GET, render the edit watchlist template
-    return render(request, 'edit_watchlist.html', {'watchlist': watchlist})
-
-
+def add_to_watchlist(request):
+    anime_id = request.POST.get('id')
+    status = request.POST.get('status')
+    anime = Animedata.objects.get(id=anime_id)
+    watchlist, created = WatchList.objects.get_or_create(user=request.user, anime=anime)
+    watchlist.status = status
+    watchlist.save()
+    return JsonResponse({'success': True})
 
 @login_required(login_url='/login/')
 def anime_detail(request, pk):
@@ -323,9 +310,9 @@ def anime_list(request):
         ('Shoujo Ai', 'Shoujo Ai'),
         ('Shoujo', 'Shoujo'),
     ]
-    selected_genre = request.GET.get('genre', '')
+    selected_genre = request.GET.get('genre')
     if selected_genre:
-        anime = Animedata.objects.filter(genre__icontains=selected_genre)
+        anime = Animedata.objects.filter(genre__in=(selected_genre.split(',')))
     else:
         anime = Animedata.objects.all()
     context = {'anime': anime, 'genres': genres, 'selected_genre': selected_genre}

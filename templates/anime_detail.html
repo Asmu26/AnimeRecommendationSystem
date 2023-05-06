@@ -189,7 +189,7 @@ function getCookie(name) {
       {% for anime in recommendations %}
       <div class="anime-card">
         <a href="{% url 'anime_detail' anime.id %}">
-        <img src="{{ anime.img_url }}" alt="{{ anime.title }}"></a> {% comment %} Link to the anime detail page {% endcomment %}
+        <img src="{{ anime.img_url }}" alt="{{ anime.title }}"></a> 
         </a>
         <div class="anime-con"> 
           <h2>{{ anime.title }}</h2>
