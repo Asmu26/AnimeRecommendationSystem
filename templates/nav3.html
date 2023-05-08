@@ -1,0 +1,25 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="{% static 'css/nav.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<div class="nav">
+    <div class="nav-header">
+      <div class="nav-title">
+        <strong>VinSmoke</strong>
+      </div>
+    </div>
+     
+        <span></span>
+        <span></span>
+        <span></span>
+    
+    <div  class="nav-links">
+      <a href="{% url 'landing' %}" >Home</a>
+      <a href="#">Popular</a>
+      <a  href="#">WatchList</a>
+      <a id="nav" href="#">Trending</a>
+      <p><a href="{% url 'login' %}"><b>Login</b></a></p>
+      <p><a href="{% url 'signup' %}"><b>signup</b></a></p>
+    </div>
+  </div>

@@ -20,6 +20,8 @@
 </head>
 
 <body>	  
+
+	{% include "nav3.html" %}
 <div class="login-box">  <!-- creates a login box -->
 	<h1>Log In</h1>
 	<form method="POST" action="">  <!-- creates a form to submit data -->
@@ -30,8 +32,13 @@
 		<input type="password" id="password" name="loginpassword" class="form-control" placeholder="Enter your password" required> <!-- creates a password input field -->
 		<input type="submit" value="Login"> <!-- creates a submit button -->
 		<p class ="text-center">don't have an account? <a href="{% url 'signup' %}">Sign up</a></p> <!-- creates a link to signup page -->
-		<p class="text-center"><a href="">Forgot your password?</a></p> <!-- creates a link to password reset page -->
+		<p class="text-center"><a href="{% url 'forgotpass' %}">Forgot your password?</a></p> <!-- creates a link to password reset page -->
 	</form>
+	{% if messages %}
+	{% for message in messages %}
+	  <p class="error-msg">{{ message }}</p>
+	{% endfor %}
+  {% endif %}
 </div>
 </body>
 </html>

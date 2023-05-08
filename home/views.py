@@ -4,17 +4,36 @@ from django.contrib import messages
 from django.contrib.auth.models import User 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth  import authenticate,  login, logout
+from jsonschema import ValidationError
+
 from .csv_add import load
 from .models import *
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 import json
-
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+from django import forms
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.urls import reverse
+import secrets
+
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(label='Email')
+
+
+def validate_email_address(value):
+    try:
+        validate_email(value)
+        return True
+    except ValidationError:
+        return False
 
 
 def recommend(genre, title):
@@ -64,40 +83,53 @@ def landing(request):
     # Render the landing page template with the context
     return render(request, 'landing.html', context)
 
-
 def signup(request):
-    if request.method=="POST":
+    if request.method == "POST":
         # Get the post parameters
-        username=request.POST['username']
-        email=request.POST['email']
-        pass1=request.POST['pass1']
-        pass2=request.POST['pass2']
+        username = request.POST['username']
+        email = request.POST['email']
+        pass1 = request.POST['pass1']
+        pass2 = request.POST['pass2']
 
-        # check for erroneous input
-        if len(username)<5:
-            # If username is less than 5 characters, redirect to signup page
+        # Check for erroneous input
+        if len(username) < 5:
+            # If username is less than 5 characters, show error message and redirect to signup page
+            messages.error(request, 'Username must be at least 5 characters long')
             return redirect('signup')
 
-        if (pass1!= pass2):
-            # If passwords do not match, redirect to signup page
-             return redirect('signup')
-
-        # Check if the user already exists
-        if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
-            # Return an error message and redirect to signup page
-            messages.error(request, 'User already exists')
+        if pass1 != pass2:
+            # If passwords do not match, show error message and redirect to signup page
+            messages.error(request, 'Passwords do not match')
             return redirect('signup')
-        else:
-            # Create a new user with the provided credentials
-            myuser = User.objects.create_user(username=username, email=email, password=pass1)
-            myuser.save()
-            # Show success message and redirect to login page
-            messages.success(request, " Your Anime account has been successfully created")
-            return redirect('login')
+
+        # Check if the email is valid
+        if not validate_email_address(email):
+            # If email is invalid, show error message and redirect to signup page
+            messages.error(request, 'Please enter a valid email address')
+            return redirect('signup')
+
+        # Check if the username already exists
+        if User.objects.filter(username=username).exists():
+            # If username already exists, show error message and redirect to signup page
+            messages.error(request, 'Username already taken')
+            return redirect('signup')
+
+        # Check if the email is already in use
+        if User.objects.filter(email=email).exists():
+            # If email is already in use, show error message and redirect to signup page
+            messages.error(request, 'Email already in use')
+            return redirect('signup')
+
+        # Create a new user with the provided credentials
+        myuser = User.objects.create_user(username=username, email=email, password=pass1)
+        myuser.save()
+
+        # Show success message and redirect to login page
+        messages.success(request, "Your Anime account has been successfully created")
+        return redirect('login')
     else:
         # Render the signup page template
         return render(request, 'signup.html')
-
 
 def userlogin(request):
     # If the request method is POST
@@ -108,18 +140,85 @@ def userlogin(request):
 
         # Authenticate the user
         user = authenticate(username=loginusername, password=loginpassword)
-        if user is not None and user.is_authenticated:
-            # Log the user in and redirect them to the home page
-            login(request, user)
-            messages.success(request, "Successfully logged in")
-            return redirect("home")
+        if user is not None:
+            if user.is_authenticated:
+                # Log the user in and redirect them to the home page
+                login(request, user)
+                messages.success(request, "Successfully logged in")
+                return redirect("home")
+            else:
+                # Display an error message and redirect them back to the login page
+                messages.error(request, 'User is not authenticated')
+                return redirect("login")
         else:
             # Display an error message and redirect them back to the login page
-            messages.error(request, "Invalid credentials! Please try again")
+            messages.error(request, 'Invalid username or password')
             return redirect("login")
 
     # If the request method is GET, display the login page
     return render(request, 'login.html')
+
+
+def forgotpass(request):
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                # Display an error message if the email is not associated with an account
+                form.add_error('email', 'This email is not associated with any account.')
+                return render(request, 'forgot_password.html', {'form': form})
+
+            # Generate a unique token and save it to the user's account
+            token = secrets.token_urlsafe()
+            user.password_reset_token = token
+            user.save()
+
+            # Send an email to the user with a link to the password reset page
+            reset_url = request.build_absolute_uri(reverse('reset_password', kwargs={'token': token}))
+            message = f'Click the link below to reset your password:\n{reset_url}'
+            send_mail('Password reset request', message, 'from@example.com', [email])
+
+            return render(request, 'password_reset_sent.html', {'email': email})
+    else:
+        form = ForgotPasswordForm()
+    return render(request, 'forgotpass.html', {'form': form})
+
+def formatter(text):
+    """
+    Formats the given text by converting all characters to uppercase and
+    adding a trailing exclamation mark.
+
+    Args:
+        text (str): The text to format.
+
+    Returns:
+        str: The formatted text.
+    """
+    return text.upper() + "!"
+
+
+def reset_password(request, token):
+    try:
+        user = User.objects.get(password_reset_token=token)
+    except User.DoesNotExist:
+        return render(request, 'password_reset_invalid.html')
+
+    if request.method == 'POST':
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        if password1 != password2:
+            formatter.add_error('password2', 'Passwords do not match.')
+        else:
+            user.set_password(password1)
+            user.password_reset_token = None
+            user.save()
+            return render(request, 'password_reset_complete.html')
+
+    return render(request, 'password_reset.html')
+
 
 def home(request):
     print(request.user)

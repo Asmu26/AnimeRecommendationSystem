@@ -1,0 +1,44 @@
+{% load static %}   <!-- loads static files -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Forgot Password</title>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> <!-- includes a CSS file -->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"> <!-- includes another CSS file -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- includes a font-awesome library -->
+	<style type="text/css">
+	body {
+	  font-family: "Roboto Mono", monospace;
+	  text-align: center;
+	  background-color: #000000; <!-- sets the background color -->
+	  background-size: cover;
+	  background-position: center top;
+	  background-repeat: no-repeat;
+	}
+	</style>
+</head>
+
+<body>	  
+
+	{% include "nav3.html" %}
+
+{% block content %}
+<div class="login-box">
+  <h1>Reset Password</h1>
+  <form method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="uidb64" value="{{ uidb64 }}">
+    <input type="hidden" name="token" value="{{ token }}">
+    <label for="new_password1">New Password:</label>
+    <input type="password" class="form-control" name="new_password1" id="new_password1" required>
+    <label for="new_password2">Confirm New Password:</label>
+    <input type="password" class="form-control" name="new_password2" id="new_password2" required>
+    <input type="submit" value="Reset Password">
+  </form>
+  {% if messages %}
+    {% for message in messages %}
+      <p class="error-msg">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+</div>

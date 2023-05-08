@@ -64,11 +64,21 @@ input[type="submit"]:hover {
 	background-color: #004257;
 }
 
-.form-container form .error-msg{
+.error-msg {
 	margin: 10px 0;
 	display: block;
 	background: crimson;
 	color: #ffffff;
 	border-radius: 5px;
 	font-size: 20px;
-}
+	padding: 10px;
+  }
+  
+  .error-msg.email {
+	display: none;
+  }
+  
+  .error-msg.username {
+	display: none;
+  }
+  
