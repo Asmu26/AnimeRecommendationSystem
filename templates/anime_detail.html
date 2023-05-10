@@ -59,6 +59,8 @@
 <!-- {%for episode in episodes%}
             <li>{{episode}}</li>
             {%endfor%} -->
+            
+    <!--  watchlist -->
 <script>
     function show_status(){
         let status = document.getElementById('status');
@@ -76,7 +78,6 @@
         }
     }
     
-
     function add_watchlist(status, id){
         const csrftoken = getCookie('csrftoken');
         const url = '/add-watchlist';

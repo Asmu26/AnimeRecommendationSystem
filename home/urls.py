@@ -26,6 +26,6 @@ urlpatterns = [
     path('average-rating', views.average_rating, name='average_rating'),
     path('forgotpass/', views.forgotpass, name='forgotpass'),
     path('reset_password/<str:token>/', views.reset_password, name='reset_password'),
-    path('anime_list/', views.anime_list, name='anime_list'),
+    path('anime_list/', views.anime_list, name='anime_list'),#genre
     path('add-watchlist', views.add_to_watchlist, name='add_to_watchlist'),
 ]

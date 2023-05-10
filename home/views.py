@@ -389,7 +389,7 @@ def submit_rating(request, anime_id, rating):
     average_rating = anime.average_rating()
     return JsonResponse({'average_rating': average_rating})
 
-def anime_list(request):
+def anime_list(request):#genre
     genres = [
         ('', 'All genres'),
         ('Action', 'Action'),
