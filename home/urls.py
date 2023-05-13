@@ -28,4 +28,7 @@ urlpatterns = [
     path('reset_password/<str:token>/', views.reset_password, name='reset_password'),
     path('anime_list/', views.anime_list, name='anime_list'),#genre
     path('add-watchlist', views.add_to_watchlist, name='add_to_watchlist'),
+    path('submit-rating/<int:anime_id>/<int:rating>', views.submit_rating, name='submit-ratig'),
+    path('popularView', views.popularView, name='popularView'),
+   # path('watch_episode', views.watch_episode, name='watch_episode'),
 ]

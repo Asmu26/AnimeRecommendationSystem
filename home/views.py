@@ -3,9 +3,10 @@ from django.core.paginator import Paginator
 from django.contrib import messages 
 from django.contrib.auth.models import User 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth  import authenticate,  login, logout
 from jsonschema import ValidationError
-
+from .models import Episode, Video
 from .csv_add import load
 from .models import *
 from django.http import JsonResponse
@@ -23,6 +24,27 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse
 import secrets
+
+
+genres = [
+        ('', 'All genres'),
+        ('Action', 'Action'),
+        ('Adventure', 'Adventure'),
+        ('Sports', 'Sports'),
+        ('School', 'School'),
+        ('Romance', 'Romance'),
+        ('Comedy', 'Comedy'),
+        ('Supernatural', 'Supernatural'),
+        ('Drama', 'Drama'),
+        ('Shounen', 'Shounen'),
+        ('Sci-Fi', 'Sci-Fi'),
+        ('Historical', 'Historical'),
+        ('Slice of Life', 'Slice of Life'),
+        ('Fantasy', 'Fantasy'),
+        ('Music', 'Music'),
+        ('Shoujo Ai', 'Shoujo Ai'),
+        ('Shoujo', 'Shoujo'),
+    ]
 
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(label='Email')
@@ -245,7 +267,31 @@ def footer(request):
     # Render the footer.html template
     return render(request, 'footer.html')
 
-
+@login_required(login_url='/login/')
+def popularView(request):
+    if request.method=='GET':
+        # Get the query parameter from the URL if present
+        query = request.GET.get('query')
+        if query:
+            # Filter the anime queryset based on the title that contains the query
+            all_anime = Animedata.objects.filter(title__contains=query).order_by('-average_rating')
+        else:
+            # If no query parameter, retrieve all anime
+            all_anime = Animedata.objects.all().order_by('-average_rating')
+            
+        # Create a paginator object with 24 items per page
+        paginator = Paginator(all_anime, 12) 
+        # Get the page number from the URL parameter
+        page_number = request.GET.get('page')
+        # Retrieve the anime queryset for the specified page number or first page if none is specified
+        all_anime = paginator.get_page(1) if page_number is None else paginator.get_page(page_number)
+        
+        notifications = UserProfile.objects.get(user=request.user).notification_audits.all()
+        # html = render_to_string('notifications.html', context, request=request)
+        count = UserProfile.objects.get(user=request.user).notifications.all().count()
+        context = {'all_anime': all_anime,
+                   'notifications': notifications, 'count': count}
+        return render(request, 'popularView.html', context)
 
 @login_required(login_url='/login/')
 def aap(request):
@@ -269,7 +315,7 @@ def aap(request):
         notifications = UserProfile.objects.get(user=request.user).notification_audits.all()
         # html = render_to_string('notifications.html', context, request=request)
         count = UserProfile.objects.get(user=request.user).notifications.all().count()
-        context = {'all_anime': all_anime,
+        context = {'all_anime': all_anime,'genres':genres,
                    'notifications': notifications, 'count': count}
         return render(request, 'aap.html', context)
     
@@ -307,29 +353,26 @@ def add_watchlist(request):
 
 # This view function requires the user to be authenticated, otherwise it redirects to the login page
 @login_required(login_url='/login/')
-def watchlists(request,anime_id):
-    # Get the anime object with the given ID
-    try:
-        anime = Animedata.objects.get(id=anime_id)
-    except Animedata.DoesNotExist:
-        return HttpResponse("Anime not found.", status=404)
-    
-    # Get the current user
+def watchlists(request):#anime_id
     user = request.user
-
-     # Check if the anime is already in the user's watchlist
-    try:
-        watchlists = WatchList.objects.get(user=user,anime=anime)
-    except WatchList.DoesNotExist:
-        watchlists = None
-    # Get the current user
+    watchlist_completed = WatchList.objects.filter(user=user, status='Completed')
+    watchlist_plan_to_watch = WatchList.objects.filter(user=user, status='Plan to Watch')
+    watchlist_on_hold = WatchList.objects.filter(user=user, status='On Hold')
+    watchlist_watching = WatchList.objects.filter(user=user, status='Watching')
+    watchlist_dropped = WatchList.objects.filter(user=user, status='Dropped')
     user = request.user
     # Get all the anime in the user's watchlist
     lists = WatchList.objects.filter(user=user)
     paginator = Paginator(lists, 24) 
     page_number = request.GET.get('page')
     watchlists = paginator.get_page(1)  if page_number is None else paginator.get_page(page_number)
-    return render(request, 'watchlist_all.html', {"watchlists":watchlists})
+    return render(request, 'watchlist_all.html', {
+        "watchlist_completed": watchlist_completed,
+        "watchlist_plan_to_watch": watchlist_plan_to_watch,
+        "watchlist_on_hold": watchlist_on_hold,
+        "watchlist_watching": watchlist_watching,
+        "watchlist_dropped": watchlist_dropped
+    })
 
 @login_required(login_url='/login/')
 def add_to_watchlist(request):
@@ -349,9 +392,15 @@ def anime_detail(request, pk):
     if WatchList.objects.filter(user=request.user,anime=anime).exists():
         watchlist_status = WatchList.objects.get(user=request.user,anime=anime).status
     recomend = recommend(anime.genre ,anime.title)
+    ratings = AnimeRating.objects.filter(user=request.user,anime=Animedata.objects.get(id=pk))
+    if ratings:
+        rating = ratings[0].rating
+    else:
+        rating = ''
     # Create a dictionary to pass the anime details and range of episodes to the template
     context = {'anime': anime,
                'episodes':range(anime.episodes),
+               'rating':rating,
                "watchlist":watchlist_status,
                'recommendations':recomend[:5]}
     
@@ -376,7 +425,7 @@ def average_rating(self):
             return 0
         else:
             return sum(rating.rating for rating in ratings) / ratings.count()
-
+@csrf_exempt
 def submit_rating(request, anime_id, rating):
     anime = get_object_or_404(Animedata, id=anime_id)
     anime_rating, created = AnimeRating.objects.get_or_create(
@@ -386,29 +435,10 @@ def submit_rating(request, anime_id, rating):
     if not created:
         anime_rating.rating = rating
         anime_rating.save()
-    average_rating = anime.average_rating()
+    average_rating = anime.average_rating
     return JsonResponse({'average_rating': average_rating})
 
 def anime_list(request):#genre
-    genres = [
-        ('', 'All genres'),
-        ('Action', 'Action'),
-        ('Adventure', 'Adventure'),
-        ('Sports', 'Sports'),
-        ('School', 'School'),
-        ('Romance', 'Romance'),
-        ('Comedy', 'Comedy'),
-        ('Supernatural', 'Supernatural'),
-        ('Drama', 'Drama'),
-        ('Shounen', 'Shounen'),
-        ('Sci-Fi', 'Sci-Fi'),
-        ('Historical', 'Historical'),
-        ('Slice of Life', 'Slice of Life'),
-        ('Fantasy', 'Fantasy'),
-        ('Music', 'Music'),
-        ('Shoujo Ai', 'Shoujo Ai'),
-        ('Shoujo', 'Shoujo'),
-    ]
     selected_genre = request.GET.get('genre')
     if selected_genre:
         anime = Animedata.objects.filter(genre__in=(selected_genre.split(',')))
@@ -416,3 +446,4 @@ def anime_list(request):#genre
         anime = Animedata.objects.all()
     context = {'anime': anime, 'genres': genres, 'selected_genre': selected_genre}
     return render(request, 'anime_list.html', context)
+

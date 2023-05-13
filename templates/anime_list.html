@@ -38,21 +38,21 @@
   {% else %}
       <p>No anime found.</p>
   {% endif %}
-      <script>
-        const genreSelect = document.querySelector('#genre');
-        const animeCards = document.querySelectorAll('.anime-card');
-        
-        genreSelect.addEventListener('change', () => {
-          const selectedGenre = genreSelect.value.toLowerCase();
-          animeCards.forEach(card => {
-            if (selectedGenre === '' || card.innerHTML.toLowerCase().includes(selectedGenre)) {
-              card.style.display = 'block';
-            } else {
-              card.style.display = 'none';
-            }
-          });
-        });
-      </script>
+	<script>
+		const genreSelect = document.querySelector('#genre');
+		const animeCards = document.querySelectorAll('.anime-card');
+
+		genreSelect.addEventListener('change', () => {
+			const selectedGenre = genreSelect.value.toLowerCase();
+			animeCards.forEach(card => {
+				if (selectedGenre === '' || card.dataset.genres.includes(selectedGenre)) {
+					card.style.display = 'block';
+				} else {
+					card.style.display = 'none';
+				}
+			});
+		});
+	</script>
 
     <footer>
     {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}

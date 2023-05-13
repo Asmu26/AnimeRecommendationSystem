@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>VinSmoke</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+  <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'css/aap.css' %}">
+  
+</head>
+<body>
+
+     {% include "nav.html" %}
+      </select>
+  </form>
+     <div class="anime-container">
+      {% for anime in all_anime %}
+        <div class="anime-card">
+          <a href="{% url 'anime_detail' anime.id %}"> 
+          <img src="{{ anime.img_url }}" alt="{{ anime.title }}"></a> {% comment %} Link to the anime detail page {% endcomment %}
+          <div class="anime-con"> 
+              <h2>{{ anime.title }}</h2>
+          </div>
+          
+          <p>Score: {{ anime.score }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  
+    <div class="pagination">
+      <span class="step-links">
+          {% if all_anime.has_previous %}
+              <a href="?page=1">&laquo; first</a> {% comment %} Link to the first page {% endcomment %}
+              <a href="?page={{ all_anime.previous_page_number }}">previous</a> {% comment %} Link to the previous page {% endcomment %}
+          {% endif %}
+  
+          <span class="current-page">
+              Page {{ all_anime.number }} of {{ all_anime.paginator.num_pages }}
+          </span>
+  
+          {% if all_anime.has_next %}
+              <a href="?page={{ all_anime.next_page_number }}">next</a> {% comment %} Link to the next page {% endcomment %}
+              <a href="?page={{ all_anime.paginator.num_pages }}">last &raquo;</a> {% comment %} Link to the last page {% endcomment %}
+          {% endif %}
+      </span>
+    </div>
+  </body>
+  <footer>
+  {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}
+  </footer>

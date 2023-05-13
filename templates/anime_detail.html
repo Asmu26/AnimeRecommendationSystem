@@ -27,7 +27,7 @@
                     <span id="status"></span>
                 </i> 
                 {% endif %}
-                <a href="#" class="fas fa-play">Watch Now</a>
+                <a href=" " class="fas fa-play">Watch Now</a>
             </div>
             <div class="col-md-3">
                 <div class="text-container">
@@ -43,19 +43,19 @@
     </div>
     <h2>Rating</h2>
     <div class="rating-container">
-        <input type="radio" name="rating" id="rating-5">
+        <input type="radio" name="rating" id="rating-5" value="5" {% if rating == 5 %}checked{% endif %}>
         <label for="rating-5" class="fas fa-star"></label>
-        <input type="radio" name="rating" id="rating-4">
+        <input type="radio" name="rating" id="rating-4" value="4" {% if rating == 4 %}checked{% endif %}>
         <label for="rating-4" class="fas fa-star"></label>
-        <input type="radio" name="rating" id="rating-3">
+        <input type="radio" name="rating" id="rating-3" value="3" {% if rating == 3 %}checked{% endif %}>
         <label for="rating-3" class="fas fa-star"></label>
-        <input type="radio" name="rating" id="rating-2">
+        <input type="radio" name="rating" id="rating-2" value="2" {% if rating == 2 %}checked{% endif %}>
         <label for="rating-2" class="fas fa-star"></label>
-        <input type="radio" name="rating" id="rating-1">
+        <input type="radio" name="rating" id="rating-1" value="1" {% if rating == 1 %}checked{% endif %}>
         <label for="rating-1" class="fas fa-star"></label>
-    </div>
+      </div>
+      
 </body>
-</html>
 <!-- {%for episode in episodes%}
             <li>{{episode}}</li>
             {%endfor%} -->
@@ -115,7 +115,42 @@ function getCookie(name) {
 }
    </script>
    <script>
-    const ratingContainer = document.querySelector(".rating-container");
+    function submitRating(animeId, rating) {
+        // Send an AJAX request to the server to submit the rating
+        
+        fetch(`/submit-rating/${animeId}/${rating}`, {
+          method: 'POST',
+          credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Update the average rating on the page
+          const averageRating = data.average_rating;
+          const ratingContainer = document.querySelector('.rating-container');
+          const averageRatingLabel = ratingContainer.querySelector('.average-rating');
+          averageRatingLabel.textContent = averageRating.toFixed(1);
+        })
+        .catch(error => console.error(error));
+      }
+      
+      const ratingContainer = document.querySelector('.rating-container');
+      const ratingInputs = ratingContainer.querySelectorAll('input[type=radio]');
+      
+      // Add a click event listener to each rating input
+      ratingInputs.forEach(ratingInput => {
+        ratingInput.addEventListener('click', () => {
+          // Get the selected rating from the value of the radio button
+          const rating = ratingInput.value;
+      // Get the anime ID from the URL
+const url = new URL(window.location.href);
+const animeId = url.pathname.split('/')[2];
+            console.log(rating);
+          // Submit the rating to the server
+          submitRating(animeId, rating);
+        });
+      });
+      
+    {% comment %} const ratingContainer = document.querySelector(".rating-container");
     const ratingForm = document.querySelector("#rating-form");
     const ratingInput = document.querySelector("#rating-input");
     const submitButton = document.querySelector("#submit-rating");
@@ -180,7 +215,7 @@ function getCookie(name) {
           // Enable the submit button
           submitButton.disabled = false;
         });
-    });
+    }); {% endcomment %}
     
    </script>
 <!--Recommendation part -->
@@ -202,5 +237,5 @@ function getCookie(name) {
   <footer>
     {% include "footer.html" %}  
   </footer>
-  </html>
+</html>
   

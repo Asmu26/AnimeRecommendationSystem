@@ -13,7 +13,14 @@
 <body>
 
      {% include "nav.html" %}
-
+     <form id="genre-form">
+      <label for="genre">Filter by genre:</label>
+      <select id="genre" name="genre">
+          {% for genre in genres %}
+              <option value="{{ genre.0 }}" {% if selected_genre == genre.0 %}selected{% endif %}>{{ genre.1 }}</option>
+          {% endfor %}
+      </select>
+  </form>
      <div class="anime-container">
       {% for anime in all_anime %}
         <div class="anime-card">
@@ -45,6 +52,21 @@
           {% endif %}
       </span>
     </div>
+    <script>
+      const genreSelect = document.querySelector('#genre');
+      const animeCards = document.querySelectorAll('.anime-card');
+  
+      genreSelect.addEventListener('change', () => {
+        const selectedGenre = genreSelect.value.toLowerCase();
+        animeCards.forEach(card => {
+          if (selectedGenre === '' || card.dataset.genres.includes(selectedGenre)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    </script>
   </body>
   <footer>
   {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}

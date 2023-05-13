@@ -213,7 +213,7 @@ h2 {
 
 .rating-container {
   display: flex;
-  flex-direction: row;
+  flex-direction:  row-reverse;
   justify-content: center;
   align-items: center;
   margin: 1rem 0;

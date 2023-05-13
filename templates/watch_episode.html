@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>VinSmoke</title>
+    <link rel="stylesheet" href="{% static 'css/details.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+</head>
+<body>
+    {% include "nav.html" %}
+
+<div class="video-container">
+    <video id="anime-video" controls>
+        <source src="{{ video_url }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<footer>
+    {% include "footer.html" %}  
+  </footer>
+  </html>

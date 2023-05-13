@@ -41,9 +41,19 @@ class Animedata(models.Model):
     score = models.FloatField()
     img_url =models.TextField()
     link = models.TextField()
+    average_rating = models.FloatField(default=0.0)
+
     def __str__(self):
         return self.title
-    
+
+    def calculate_average_rating(self):
+        ratings = self.ratings.all()
+        if ratings.count() > 0:
+            total_ratings = sum([rating.rating for rating in ratings])
+            return total_ratings / ratings.count()
+        else:
+            return 0.0
+
 class Episode(models.Model):
     anime=models.ForeignKey(Animedata,related_name='episode_of',on_delete=models.CASCADE)
     # episode = models.IntegerField()
@@ -95,3 +105,16 @@ class AnimeRating(models.Model):
     class Meta:
         unique_together = ('user', 'anime')
 
+    def save(self, *args, **kwargs):
+        super(AnimeRating, self).save(*args, **kwargs)
+        self.anime.average_rating = self.anime.calculate_average_rating()
+        self.anime.save()
+
+class Video(models.Model):
+    anime = models.ForeignKey(Animedata, on_delete=models.CASCADE, related_name='videos')
+    episode_number = models.IntegerField()
+    title = models.CharField(max_length=255)
+    video_url = models.URLField()
+
+    def __str__(self):
+        return f"{self.anime.title} - Episode {self.episode_number}"
