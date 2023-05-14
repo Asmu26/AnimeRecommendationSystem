@@ -24,21 +24,40 @@
 	{% include "nav3.html" %}
 <div class="login-box">  <!-- creates a login box -->
 	<h1>Log In</h1>
-	<form method="POST" action="">  <!-- creates a form to submit data -->
-		  {% csrf_token %}  <!-- generates a CSRF token -->
-		  <label for="name">UserName:</label>
-		  <input type="text" class="form-control" name="loginusername" id="loginusername" placeholder="Enter your username" required> <!-- creates a text input field -->
+	<form method="POST" action="">  
+		{% csrf_token %}  
+		<label for="name">UserName:</label>
+		<input type="text" class="form-control" name="loginusername" id="loginusername" placeholder="Enter your username" required> 
 		<label for="password">Password</label>
-		<input type="password" id="password" name="loginpassword" class="form-control" placeholder="Enter your password" required> <!-- creates a password input field -->
-		<input type="submit" value="Login"> <!-- creates a submit button -->
-		<p class ="text-center">don't have an account? <a href="{% url 'signup' %}">Sign up</a></p> <!-- creates a link to signup page -->
-		<p class="text-center"><a href="{% url 'forgotpass' %}">Forgot your password?</a></p> <!-- creates a link to password reset page -->
-	</form>
+		<div class="password-container">
+		  <input type="password" id="password" name="loginpassword" class="form-control" placeholder="Enter your password" required>
+		  <button type="button" class="show-password-toggle"><i class="far fa-eye"></i></button>
+		</div>
+		<input type="submit" value="Login"> 
+		<p class ="text-center">don't have an account? <a href="{% url 'signup' %}">Sign up</a></p> 
+		<p class="text-center"><a href="{% url 'forgotpass' %}">Forgot your password?</a></p> 
+	  </form>
 	{% if messages %}
 	{% for message in messages %}
 	  <p class="error-msg">{{ message }}</p>
 	{% endfor %}
   {% endif %}
 </div>
+<script>
+	var toggleBtns = document.querySelectorAll('.show-password-toggle');
+	var passInputs = document.querySelectorAll('input[type="password"]');
+  
+	toggleBtns.forEach(function(btn, index) {
+	  btn.addEventListener('click', function() {
+		if (passInputs[index].type === 'password') {
+		  passInputs[index].type = 'text';
+		  btn.classList.add('active');
+		} else {
+		  passInputs[index].type = 'password';
+		  btn.classList.remove('active');
+		}
+	  });
+	});
+  </script>
 </body>
 </html>

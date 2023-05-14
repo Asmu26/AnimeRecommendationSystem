@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib import messages 
@@ -122,6 +123,11 @@ def signup(request):
         if pass1 != pass2:
             # If passwords do not match, show error message and redirect to signup page
             messages.error(request, 'Passwords do not match')
+            return redirect('signup')
+
+        if not re.search("[A-Z]", pass1):
+            # If password does not contain an uppercase character, show error message and redirect to signup page
+            messages.error(request, 'Password must contain at least one uppercase character')
             return redirect('signup')
 
         # Check if the email is valid
@@ -315,7 +321,7 @@ def aap(request):
         notifications = UserProfile.objects.get(user=request.user).notification_audits.all()
         # html = render_to_string('notifications.html', context, request=request)
         count = UserProfile.objects.get(user=request.user).notifications.all().count()
-        context = {'all_anime': all_anime,'genres':genres,
+        context = {'all_anime': all_anime,
                    'notifications': notifications, 'count': count}
         return render(request, 'aap.html', context)
     

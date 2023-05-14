@@ -13,14 +13,7 @@
 <body>
 
      {% include "nav.html" %}
-     <form id="genre-form">
-      <label for="genre">Filter by genre:</label>
-      <select id="genre" name="genre">
-          {% for genre in genres %}
-              <option value="{{ genre.0 }}" {% if selected_genre == genre.0 %}selected{% endif %}>{{ genre.1 }}</option>
-          {% endfor %}
-      </select>
-  </form>
+
      <div class="anime-container">
       {% for anime in all_anime %}
         <div class="anime-card">

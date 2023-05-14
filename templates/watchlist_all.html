@@ -6,12 +6,12 @@
 	<title>VinSmoke</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="{% static 'css/nav.css' %}">
-  <link rel="stylesheet" href="{% static 'css/aap.css' %}">
+  <link rel="stylesheet" href="{% static 'css/watch.css' %}">
   {% include "nav.html" %} 
 <h2>Completed</h2>
 {% for watchlist in watchlist_completed %}
     <div class="anime-item">
-        <a href="{{ watchlist.anime.link }}">
+        
             <img src="{{ watchlist.anime.img_url }}">
             <h3>{{ watchlist.anime.title }}</h3>
         </a>
@@ -23,7 +23,7 @@
 <h2>Plan to Watch</h2>
 {% for watchlist in watchlist_plan_to_watch %}
     <div class="anime-item">
-        <a href="{{ watchlist.anime.link }}">
+        
             <img src="{{ watchlist.anime.img_url }}">
             <h3>{{ watchlist.anime.title }}</h3>
         </a>
@@ -35,7 +35,7 @@
 <h2>Watching</h2>
 {% for watchlist in watchlist_watching %}
     <div class="anime-item">
-        <a href="{{ watchlist.anime.link }}">
+        
             <img src="{{ watchlist.anime.img_url }}">
             <h3>{{ watchlist.anime.title }}</h3>
         </a>
@@ -47,7 +47,7 @@
 <h2>On Hold</h2>
 {% for watchlist in watchlist_on_hold %}
     <div class="anime-item">
-        <a href="{{ watchlist.anime.link }}">
+        
             <img src="{{ watchlist.anime.img_url }}">
             <h3>{{ watchlist.anime.title }}</h3>
         </a>
@@ -59,7 +59,7 @@
 <h2>Dropped</h2>
 {% for watchlist in watchlist_dropped %}
     <div class="anime-item">
-        <a href="{{ watchlist.anime.link }}">
+       
             <img src="{{ watchlist.anime.img_url }}">
             <h3>{{ watchlist.anime.title }}</h3>
         </a>

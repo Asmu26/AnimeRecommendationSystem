@@ -82,3 +82,45 @@ input[type="submit"]:hover {
 	display: none;
   }
   
+  .show-password-toggle {
+	position: absolute;
+	top: 50%;
+	right: 5px;
+	transform: translateY(-50%);
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	background: transparent;
+	border: none;
+	outline: none;
+	cursor: pointer;
+  }
+  
+  input[type="password"] {
+	padding-right: 45px;
+  }
+  
+  .show-password-toggle i {
+	font-size: 22px;
+	color: #ccc;
+  }
+  
+  .show-password-toggle.active i {
+	color: #f90;
+  }
+  
+  .show-password-toggle.active:before {
+	content: "\f070";
+	font-family: "FontAwesome";
+	font-size: 20px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	text-align: center;
+	color: #f90;
+	z-index: 1;
+  }
+  
