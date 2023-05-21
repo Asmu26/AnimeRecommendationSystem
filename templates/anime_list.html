@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="{% static 'css/nav.css' %}">
   <link rel="stylesheet" href="{% static 'css/footer.css' %}">
   <link rel="stylesheet" href="{% static 'css/anime_list.css' %}">
-  
-  
 </head>
 <body>
   {% include "nav.html" %}
@@ -24,14 +22,14 @@
 
   {% if anime %}
       <div class="anime-container">
-       
           {% for a in anime %}
-              <div class="anime-card">
-                  <img src="{{ a.img_url }}" alt="{{ a.title }}">
+              <div class="anime-card"data-genres="{{ a.genre }}">
+                <a href="{% url 'anime_detail' a.id %}"> 
+                  <img src="{{ a.img_url }}" alt="{{ a.title }}"></a>
                   <div class="anime-info">
                       <h2>{{ a.title }}</h2>
-                      <a href="{{ a.link }}" target="_blank">Watch Now</a>
                   </div>
+                
               </div>
           {% endfor %}
       </div>
@@ -45,7 +43,7 @@
 		genreSelect.addEventListener('change', () => {
 			const selectedGenre = genreSelect.value.toLowerCase();
 			animeCards.forEach(card => {
-				if (selectedGenre === '' || card.dataset.genres.includes(selectedGenre)) {
+				if (selectedGenre === '' || card.dataset.genres.toLowerCase().includes(selectedGenre)) {
 					card.style.display = 'block';
 				} else {
 					card.style.display = 'none';
@@ -57,3 +55,5 @@
     <footer>
     {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}
     </footer>
+</body>
+</html>

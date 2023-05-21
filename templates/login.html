@@ -6,58 +6,50 @@
 	<title>Login</title>
 	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> <!-- includes a CSS file -->
 	<link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"> <!-- includes another CSS file -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- includes a font-awesome library -->
-	<style type="text/css">
-	body {
-	  font-family: "Roboto Mono", monospace;
-	  text-align: center;
-	  background-color: #000000; <!-- sets the background color -->
-	  background-size: cover;
-	  background-position: center top;
-	  background-repeat: no-repeat;
-	}
-	</style>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- includes the Font Awesome library -->
+
+	<script>
+		function togglePassword() {
+			var passwordInput = document.getElementById("password");
+			var eyeIcon = document.getElementById("togglePassword");
+
+			if (passwordInput.type === "password") {
+				passwordInput.type = "text";
+				eyeIcon.classList.remove("fa-eye");
+				eyeIcon.classList.add("fa-eye-slash");
+			} else {
+				passwordInput.type = "password";
+				eyeIcon.classList.remove("fa-eye-slash");
+				eyeIcon.classList.add("fa-eye");
+			}
+		}
+	</script>
+
 </head>
 
 <body>	  
-
 	{% include "nav3.html" %}
-<div class="login-box">  <!-- creates a login box -->
-	<h1>Log In</h1>
-	<form method="POST" action="">  
-		{% csrf_token %}  
-		<label for="name">UserName:</label>
-		<input type="text" class="form-control" name="loginusername" id="loginusername" placeholder="Enter your username" required> 
-		<label for="password">Password</label>
-		<div class="password-container">
-		  <input type="password" id="password" name="loginpassword" class="form-control" placeholder="Enter your password" required>
-		  <button type="button" class="show-password-toggle"><i class="far fa-eye"></i></button>
-		</div>
-		<input type="submit" value="Login"> 
-		<p class ="text-center">don't have an account? <a href="{% url 'signup' %}">Sign up</a></p> 
-		<p class="text-center"><a href="{% url 'forgotpass' %}">Forgot your password?</a></p> 
-	  </form>
-	{% if messages %}
-	{% for message in messages %}
-	  <p class="error-msg">{{ message }}</p>
-	{% endfor %}
-  {% endif %}
-</div>
-<script>
-	var toggleBtns = document.querySelectorAll('.show-password-toggle');
-	var passInputs = document.querySelectorAll('input[type="password"]');
-  
-	toggleBtns.forEach(function(btn, index) {
-	  btn.addEventListener('click', function() {
-		if (passInputs[index].type === 'password') {
-		  passInputs[index].type = 'text';
-		  btn.classList.add('active');
-		} else {
-		  passInputs[index].type = 'password';
-		  btn.classList.remove('active');
-		}
-	  });
-	});
-  </script>
+	
+	<div class="login-box">  <!-- creates a login box -->
+		<h1>Log In</h1>
+		<form method="POST" action="">  <!-- creates a form to submit data -->
+			{% csrf_token %}  <!-- generates a CSRF token -->
+			<label for="name">UserName:</label>
+			<input type="text" class="form-control" name="loginusername" id="loginusername" placeholder="Enter your username" required> <!-- creates a text input field -->
+			<label for="password">Password</label>
+			<div class="password-input">
+				<input type="password" id="password" name="loginpassword" class="form-control" placeholder="Enter your password" required> <!-- creates a password input field -->
+				<i id="togglePassword" class="fas fa-eye" onclick="togglePassword()"></i>
+			</div>
+			<input type="submit" value="Login"> <!-- creates a submit button -->
+			<p class="text-center">Don't have an account? <a href="{% url 'signup' %}">Sign up</a></p> <!-- creates a link to signup page -->
+			<p class="text-center"><a href="{% url 'forgotpass' %}">Forgot your password?</a></p> <!-- creates a link to password reset page -->
+			{% if messages %}
+				{% for message in messages %}
+					<p class="error-msg">{{ message }}</p>
+				{% endfor %}
+			{% endif %}
+		</form>
+	</div>
 </body>
 </html>

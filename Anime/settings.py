@@ -130,3 +130,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
     
 ]
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Update with your SMTP host
+EMAIL_PORT = 587  # Update with your SMTP port
+EMAIL_HOST_USER = 'asmitta07@gmail.com'  # Update with your email address
+EMAIL_HOST_PASSWORD = 'hlgdnlwnvqevplmm'  # Update with your email password
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

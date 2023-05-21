@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User 
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -68,14 +69,15 @@ class Episode(models.Model):
     
 class WatchList(models.Model):
     class StatusChoices(models.TextChoices):
-        COMPLETED = '0', 'Completed'
-        DROPPED = '1', 'Dropped'
-        PLAN_TO_WATCH = '2', 'Plan to Watch'
-        ON_HOLD = '3', 'On Hold'
-        WATCHING = '4', 'Watching'
-    user = models.ForeignKey(User,related_name='added_by',on_delete=models.CASCADE)
-    anime=models.ForeignKey(Animedata,related_name='added_to',on_delete=models.CASCADE)
-    status = models.CharField(max_length=1, choices=StatusChoices.choices)
+        COMPLETED = 'completed', 'Completed'
+        DROPPED = 'dropped', 'Dropped'
+        PLAN_TO_WATCH = 'plan_to_watch', 'Plan to Watch'
+        ON_HOLD = 'on_hold', 'On Hold'
+        WATCHING = 'watching', 'Watching'
+    
+    user = models.ForeignKey(User, related_name='added_by', on_delete=models.CASCADE)
+    anime = models.ForeignKey(Animedata, related_name='added_to', on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, choices=StatusChoices.choices)
 
 class Notification(models.Model):
     title = models.TextField(max_length=255)
@@ -94,7 +96,6 @@ class NotificationView(models.Model):
     notification = models.ForeignKey(Notification, related_name='view_of', on_delete=models.CASCADE)
     user = models.ForeignKey(User,related_name='to',on_delete=models.CASCADE)
     is_viewed = models.BooleanField(default=False)
-
 
 
 class AnimeRating(models.Model):
@@ -118,3 +119,4 @@ class Video(models.Model):
 
     def __str__(self):
         return f"{self.anime.title} - Episode {self.episode_number}"
+

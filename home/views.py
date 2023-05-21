@@ -24,28 +24,9 @@ from django import forms
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse
-import secrets
-
-
-genres = [
-        ('', 'All genres'),
-        ('Action', 'Action'),
-        ('Adventure', 'Adventure'),
-        ('Sports', 'Sports'),
-        ('School', 'School'),
-        ('Romance', 'Romance'),
-        ('Comedy', 'Comedy'),
-        ('Supernatural', 'Supernatural'),
-        ('Drama', 'Drama'),
-        ('Shounen', 'Shounen'),
-        ('Sci-Fi', 'Sci-Fi'),
-        ('Historical', 'Historical'),
-        ('Slice of Life', 'Slice of Life'),
-        ('Fantasy', 'Fantasy'),
-        ('Music', 'Music'),
-        ('Shoujo Ai', 'Shoujo Ai'),
-        ('Shoujo', 'Shoujo'),
-    ]
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import default_token_generator
 
 class ForgotPasswordForm(forms.Form):
     email = forms.EmailField(label='Email')
@@ -186,7 +167,6 @@ def userlogin(request):
     # If the request method is GET, display the login page
     return render(request, 'login.html')
 
-
 def forgotpass(request):
     if request.method == 'POST':
         form = ForgotPasswordForm(request.POST)
@@ -197,15 +177,18 @@ def forgotpass(request):
             except User.DoesNotExist:
                 # Display an error message if the email is not associated with an account
                 form.add_error('email', 'This email is not associated with any account.')
-                return render(request, 'forgot_password.html', {'form': form})
+                return render(request, 'forgotpass.html', {'form': form})
 
             # Generate a unique token and save it to the user's account
-            token = secrets.token_urlsafe()
-            user.password_reset_token = token
-            user.save()
+            token = default_token_generator.make_token(user)
 
-            # Send an email to the user with a link to the password reset page
-            reset_url = request.build_absolute_uri(reverse('reset_password', kwargs={'token': token}))
+            # Create the password reset URL
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_url = request.build_absolute_uri(
+                reverse('password_reset_confirm', kwargs={'uidb64': uidb64, 'token': token})
+            )
+
+            # Send an email to the user with the password reset URL
             message = f'Click the link below to reset your password:\n{reset_url}'
             send_mail('Password reset request', message, 'from@example.com', [email])
 
@@ -214,19 +197,7 @@ def forgotpass(request):
         form = ForgotPasswordForm()
     return render(request, 'forgotpass.html', {'form': form})
 
-def formatter(text):
-    """
-    Formats the given text by converting all characters to uppercase and
-    adding a trailing exclamation mark.
-
-    Args:
-        text (str): The text to format.
-
-    Returns:
-        str: The formatted text.
-    """
-    return text.upper() + "!"
-
+from django.contrib.auth.forms import PasswordResetForm
 
 def reset_password(request, token):
     try:
@@ -235,17 +206,22 @@ def reset_password(request, token):
         return render(request, 'password_reset_invalid.html')
 
     if request.method == 'POST':
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        if password1 != password2:
-            formatter.add_error('password2', 'Passwords do not match.')
-        else:
-            user.set_password(password1)
-            user.password_reset_token = None
-            user.save()
-            return render(request, 'password_reset_complete.html')
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+            if password1 != password2:
+                form.add_error('password2', 'Passwords do not match.')
+            else:
+                user.set_password(password1)
+                user.password_reset_token = None
+                user.save()
+                return render(request, 'password_reset_complete.html')
+    else:
+        form = PasswordResetForm()
 
-    return render(request, 'password_reset.html')
+    return render(request, 'password_reset.html', {'form': form})
+
 
 
 def home(request):
@@ -359,25 +335,19 @@ def add_watchlist(request):
 
 # This view function requires the user to be authenticated, otherwise it redirects to the login page
 @login_required(login_url='/login/')
-def watchlists(request):#anime_id
+def watchlists(request, status=None):
     user = request.user
-    watchlist_completed = WatchList.objects.filter(user=user, status='Completed')
-    watchlist_plan_to_watch = WatchList.objects.filter(user=user, status='Plan to Watch')
-    watchlist_on_hold = WatchList.objects.filter(user=user, status='On Hold')
-    watchlist_watching = WatchList.objects.filter(user=user, status='Watching')
-    watchlist_dropped = WatchList.objects.filter(user=user, status='Dropped')
-    user = request.user
-    # Get all the anime in the user's watchlist
-    lists = WatchList.objects.filter(user=user)
-    paginator = Paginator(lists, 24) 
+    if status:
+        lists = WatchList.objects.filter(user=user, status=status)
+    else:
+        lists = WatchList.objects.filter(user=user)
+
+    paginator = Paginator(lists, 24)
     page_number = request.GET.get('page')
-    watchlists = paginator.get_page(1)  if page_number is None else paginator.get_page(page_number)
+    watchlists = paginator.get_page(1) if page_number is None else paginator.get_page(page_number)
+
     return render(request, 'watchlist_all.html', {
-        "watchlist_completed": watchlist_completed,
-        "watchlist_plan_to_watch": watchlist_plan_to_watch,
-        "watchlist_on_hold": watchlist_on_hold,
-        "watchlist_watching": watchlist_watching,
-        "watchlist_dropped": watchlist_dropped
+        "watchlists": watchlists,
     })
 
 @login_required(login_url='/login/')
@@ -444,8 +414,29 @@ def submit_rating(request, anime_id, rating):
     average_rating = anime.average_rating
     return JsonResponse({'average_rating': average_rating})
 
+@login_required(login_url='/login/')
 def anime_list(request):#genre
+    genres = [
+        ('', 'All genres'),
+        ('Action', 'Action'),
+        ('Adventure', 'Adventure'),
+        ('Sports', 'Sports'),
+        ('School', 'School'),
+        ('Romance', 'Romance'),
+        ('Comedy', 'Comedy'),
+        ('Supernatural', 'Supernatural'),
+        ('Drama', 'Drama'),
+        ('Shounen', 'Shounen'),
+        ('Sci-Fi', 'Sci-Fi'),
+        ('Historical', 'Historical'),
+        ('Slice of Life', 'Slice of Life'),
+        ('Fantasy', 'Fantasy'),
+        ('Music', 'Music'),
+        ('Shoujo Ai', 'Shoujo Ai'),
+        ('Shoujo', 'Shoujo'),
+    ]
     selected_genre = request.GET.get('genre')
+    print(selected_genre)
     if selected_genre:
         anime = Animedata.objects.filter(genre__in=(selected_genre.split(',')))
     else:
@@ -453,3 +444,34 @@ def anime_list(request):#genre
     context = {'anime': anime, 'genres': genres, 'selected_genre': selected_genre}
     return render(request, 'anime_list.html', context)
 
+@login_required(login_url='/login/')
+def deletewatch(request, id):
+    watchlist = get_object_or_404(WatchList, id=id)
+    watchlist.delete()
+    messages.success(request, 'Watchlist item deleted successfully!')
+    return redirect('watchlist')
+
+@login_required(login_url='/login/')
+def watching_view(request):
+    watchlists = WatchList.objects.filter(status='Watching')
+    return render(request, 'watching.html', {'watchlists': watchlists})
+
+@login_required(login_url='/login/')
+def plan_to_watch_view(request):
+    watchlists = WatchList.objects.filter(status='Plan to Watch')
+    return render(request, 'towatch.html', {'watchlists': watchlists})
+
+@login_required(login_url='/login/')
+def on_hold_view(request):
+    watchlists = WatchList.objects.filter(status='On-Hold')
+    return render(request, 'onhold.html', {'watchlists': watchlists})
+
+@login_required(login_url='/login/')
+def dropped_view(request):
+    watchlists = WatchList.objects.filter(status='Dropped')
+    return render(request, 'drop.html', {'watchlists': watchlists})
+
+@login_required(login_url='/login/')
+def completed_view(request):
+    watchlists = WatchList.objects.filter(status='Completed')
+    return render(request, 'completed.html', {'watchlists': watchlists})

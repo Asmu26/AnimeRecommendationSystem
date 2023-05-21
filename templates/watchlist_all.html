@@ -4,71 +4,59 @@
 <head>
 	<meta charset="UTF-8">
 	<title>VinSmoke</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'css/nav.css' %}">
-  <link rel="stylesheet" href="{% static 'css/watch.css' %}">
-  {% include "nav.html" %} 
-<h2>Completed</h2>
-{% for watchlist in watchlist_completed %}
-    <div class="anime-item">
-        
-            <img src="{{ watchlist.anime.img_url }}">
-            <h3>{{ watchlist.anime.title }}</h3>
-        </a>
-    </div>
-{% empty %}
-    <p>No anime in this list.</p>
-{% endfor %}
-
-<h2>Plan to Watch</h2>
-{% for watchlist in watchlist_plan_to_watch %}
-    <div class="anime-item">
-        
-            <img src="{{ watchlist.anime.img_url }}">
-            <h3>{{ watchlist.anime.title }}</h3>
-        </a>
-    </div>
-{% empty %}
-    <p>No anime in this list.</p>
-{% endfor %}
-
-<h2>Watching</h2>
-{% for watchlist in watchlist_watching %}
-    <div class="anime-item">
-        
-            <img src="{{ watchlist.anime.img_url }}">
-            <h3>{{ watchlist.anime.title }}</h3>
-        </a>
-    </div>
-{% empty %}
-    <p>No anime in this list.</p>
-{% endfor %}
-
-<h2>On Hold</h2>
-{% for watchlist in watchlist_on_hold %}
-    <div class="anime-item">
-        
-            <img src="{{ watchlist.anime.img_url }}">
-            <h3>{{ watchlist.anime.title }}</h3>
-        </a>
-    </div>
-{% empty %}
-    <p>No anime in this list.</p>
-{% endfor %}
-
-<h2>Dropped</h2>
-{% for watchlist in watchlist_dropped %}
-    <div class="anime-item">
-       
-            <img src="{{ watchlist.anime.img_url }}">
-            <h3>{{ watchlist.anime.title }}</h3>
-        </a>
-    </div>
-{% empty %}
-    <p>No anime in this list.</p>
-{% endfor %}
-
-<!-- Repeat for On Hold and Watching lists -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="{% static 'css/nav.css' %}">
+	<link rel="stylesheet" href="{% static 'css/watch.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aap.css' %}">
+	{% include "nav.html" %} 
+	{% include "nav2.html" %} 
+</head>
+<body>
+<div>
+	<div class="watchlist">
+		{% for watchlist in watchlists %}
+			<div class="anime-card">
+                <a href="{% url 'anime_detail' watchlist.anime.id %}">
+				<img src="{{ watchlist.anime.img_url }}" alt="{{ watchlist.anime.title }} image"><a>
+				<div class="anime-con">
+					<h2>{{ watchlist.anime.title }}</h2>
+					<form action="{% url 'delete_watchlist' watchlist.id %}" method="POST">
+						{% csrf_token %}
+						<button type="submit" class="delete-button"><i class="fas fa-trash-alt"></i></button>
+					</form>
+				</div>
+			</div>
+		{% empty %}
+			<p>No anime in the watchlist.</p>
+		{% endfor %}
+	</div>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+	<div class="pagination">
+        <span class="step-links">
+            {% if all_anime.has_previous %}
+                <a href="?page=1">&laquo; first</a> {% comment %} Link to the first page {% endcomment %}
+                <a href="?page={{ all_anime.previous_page_number }}">previous</a> {% comment %} Link to the previous page {% endcomment %}
+            {% endif %}
+    
+            <span class="current-page">
+                Page {{ all_anime.number }} of {{ all_anime.paginator.num_pages }}
+            </span>
+    
+            {% if all_anime.has_next %}
+                <a href="?page={{ all_anime.next_page_number }}">next</a> {% comment %} Link to the next page {% endcomment %}
+                <a href="?page={{ all_anime.paginator.num_pages }}">last &raquo;</a> {% comment %} Link to the last page {% endcomment %}
+            {% endif %}
+        </span>
+      </div>
+</div>
+</body>
 <footer>
-  {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}
-  </footer>
+    {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}
+    </footer>
+</html>

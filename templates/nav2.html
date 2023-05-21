@@ -1,13 +1,17 @@
+<!-- nav2.html -->
+
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/nav2.css' %}">
+<link rel="stylesheet" href="{% static 'css/nav.css' %}">
+
 <div class="nav2">
     <div class="nav-header">
-    <div class="nav-links">
-      <a href="/watchlist/" >All</a>
-      <a href="#" >Watching</a>
-      <a href= >On-Hold</a>
-      <a href="#" >Plan to Watch</a>
-      <a href="#" >Dropped</a>
-      <a href="#" >Completed</a>
-         
-  
+        <div class="nav-links">
+            <a href="/watchlist/">All</a>
+            <a href="{% url 'watching' %}">Watching</a>
+            <a href="{% url 'on_hold' %}">On-Hold</a>
+            <a href="{% url 'plan_to_watch' %}">Plan to Watch</a>
+            <a href="{% url 'dropped' %}">Dropped</a>
+            <a href="{% url 'completed' %}">Completed</a>
+        </div>
+    </div>
+</div>

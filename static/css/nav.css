@@ -13,7 +13,7 @@ body {
 /* Style the navigation bar */
 .nav {
   position: sticky; /* use sticky positioning */
-  z-index: 1;
+  z-index: 2;
   top: 0; /* position at the top */
   height: 50px;
   width: 100%;
@@ -23,6 +23,22 @@ body {
   align-items: center;
   padding: 0 20px;
 }
+
+.nav2 {
+  /* Your existing styles */
+  position: sticky;
+  z-index: 1;
+  top: 30px; /* Adjust the top value based on your needs */
+  height: 50px;
+  width: 100%;
+  background-color:#261429;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  
+}
+
 
 /* Style the navigation bar title */
 .nav-title {
@@ -171,7 +187,7 @@ display: block;
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .profile-icon {
-background-color: #cb8080;
+background-color: rgba(0, 0, 0, 0.3);;
 color: #fff;
 }
 

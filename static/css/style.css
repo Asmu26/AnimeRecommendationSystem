@@ -30,7 +30,9 @@ label {
 	display: block;
 }
 
-input[type="text"], input[type="email"], input[type="password"] {
+input[type="text"],
+input[type="email"],
+input[type="password"] {
 	width: 100%;
 	padding: 10px;
 	font-size: 16px;
@@ -72,55 +74,45 @@ input[type="submit"]:hover {
 	border-radius: 5px;
 	font-size: 20px;
 	padding: 10px;
-  }
-  
-  .error-msg.email {
+}
+
+.error-msg.email {
 	display: none;
-  }
-  
-  .error-msg.username {
+}
+
+.error-msg.username {
 	display: none;
-  }
-  
-  .show-password-toggle {
+}
+
+.password-input {
+	position: relative;
+	width: 100%;
+}
+
+.password-input input[type="password"] {
+	padding-right: 40px;
+}
+
+.password-input i {
 	position: absolute;
+	right: 10px;
 	top: 50%;
-	right: 5px;
 	transform: translateY(-50%);
-	display: inline-block;
-	width: 32px;
-	height: 32px;
-	background: transparent;
-	border: none;
-	outline: none;
 	cursor: pointer;
-  }
-  
-  input[type="password"] {
-	padding-right: 45px;
-  }
-  
-  .show-password-toggle i {
-	font-size: 22px;
-	color: #ccc;
-  }
-  
-  .show-password-toggle.active i {
-	color: #f90;
-  }
-  
-  .show-password-toggle.active:before {
-	content: "\f070";
-	font-family: "FontAwesome";
-	font-size: 20px;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	margin: auto;
+}
+
+.container {
+	max-width: 500px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #f2f2f2;
+	border-radius: 5px;
 	text-align: center;
-	color: #f90;
-	z-index: 1;
+  }
+  
+  p {
+	font-size: 16px;
+	color: #666666;
+	margin-bottom: 10px;
   }
   

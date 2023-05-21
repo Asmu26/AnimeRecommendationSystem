@@ -4,74 +4,69 @@
 <html>
 <head>
 	<title>Signup</title>
-	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"> 
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/nav.css' %}"><!-- Link to the CSS file -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Link to the Font Awesome CSS file -->
-	<style type="text/css">
-	body { <!-- Style for the background -->
-		font-family: "Roboto Mono", monospace;  <!-- Font style for the text -->
-		text-align: center; <!-- Text alignment for the content in the body -->
-		background-image: url("https://wallpapercave.com/wp/wp9454034.jpg");
-		background-color: #000000; <!-- Background color for the page -->
-		background-size: cover; <!-- Set the size of the background image to cover the whole page -->
-		background-position: center top; <!-- Set the position of the background image to center top -->
-		background-repeat: no-repeat; <!-- Set the background image to not repeat -->
-	}
-	</style>
+	
 </head>
 <body>
 	{% include "nav3.html" %}
-	<div class="login-box">
-		<h1>Sign Up</h1>
-		<form method="POST" action="">
-			{% csrf_token %}
-			<label for="name">Username</label>
-			<input type="text" id="username" name="username" placeholder="Enter your name" required>
-			<label for="email">Email</label>
-			<input type="email" id="email" name="email" placeholder="Enter your email" required>
-			<label for="password">Password</label>
-			<div class="password-container">
-			  <input type="password" id="pass1" name="pass1" placeholder="Enter your password" required>
-			  <button type="button" class="show-password-toggle"><i class="far fa-eye"></i></button>
+	<div class="login-box"> <!-- Create a login box -->
+		<h1>Sign Up</h1> <!-- Create a title for the sign up page -->
+		<form method="POST" action=""> <!-- Create a form with the POST method and no action -->
+			{% csrf_token %} <!-- Add a Cross-Site Request Forgery (CSRF) token to the form for security reasons -->
+			
+			<label for="name">Username</label> <!-- Add a label for the username input field -->
+			<input type="text" id="username" name="username" placeholder="Enter your name" required> <!-- Create an input field for the username and add a placeholder and set it to be required -->
+			
+			<label for="email">Email</label> <!-- Add a label for the email input field -->
+			<input type="email" id="email" name="email" placeholder="Enter your email" required> <!-- Create an input field for the email and add a placeholder and set it to be required -->
+			
+			<label for="password">Password</label> <!-- Add a label for the password input field -->
+			<div class="password-input">
+				<input type="password" id="pass1" name="pass1" placeholder="Enter your password" required> <!-- Create an input field for the password and add a placeholder and set it to be required -->
+				<i class="toggle-password fas fa-eye" data-target="pass1"></i> <!-- Add an eye icon to toggle the visibility of the password -->
 			</div>
-			<label for="password">Confirm Password</label>
-			<div class="password-container">
-			  <input type="password" id="pass2" name="pass2" placeholder="Confirm your password" required>
-			  <button type="button" class="show-password-toggle"><i class="far fa-eye"></i></button>
+			
+			<label for="confirm-password">Confirm Password</label> <!-- Add a label for the confirm password input field -->
+			<div class="password-input">
+				<input type="password" id="pass2" name="pass2" placeholder="Confirm your password" required> <!-- Create another input field for the password to confirm and add a placeholder and set it to be required -->
+				<i class="toggle-password fas fa-eye" data-target="pass2"></i> <!-- Add an eye icon to toggle the visibility of the password -->
 			</div>
-			<input type="submit" value="signup">
-			<p class="text-center">already have an account? <a href="{% url 'login' %}">Login </a></p>
-		  </form>
-		  
-		
-{% if messages %}
-  {% for message in messages %}
-    <p class="error-msg">{{ message }}</p>
-  {% endfor %}
-{% endif %}
-	  </div>	
-	  <script>
-		const toggleBtns = document.querySelectorAll('.show-password-toggle');
-		toggleBtns.forEach(toggleBtn => {
-		  const passInput = toggleBtn.previousElementSibling;
-		  toggleBtn.addEventListener('click', function() {
-			if (passInput.type === 'password') {
-			  passInput.type = 'text';
-			  toggleBtn.classList.add('active');
-			} else {
-			  passInput.type = 'password';
-			  toggleBtn.classList.remove('active');
-			}
-		  });
-		});
-	  </script>
-		
-	  
-		 
-	  
-	  
-	  
-	  
-	  
+			
+			<input type="submit" value="signup"> <!-- Create a submit button with the value "signup" -->
+			
+			<p class="text-center">already have an account? <a href="{% url 'login' %}">Login</a></p> <!-- Add a message with a link to the login page -->
+			
+			{% if messages %}
+			{% for message in messages %}
+			  <p class="error-msg">{{ message }}</p>
+			{% endfor %}
+		  {% endif %}
+		</form>
+	</div>
+
+	<script>
+  const togglePassword = (event) => {
+    const targetId = event.target.getAttribute('data-target');
+    const passwordInput = document.getElementById(targetId);
+
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      event.target.classList.remove('fa-eye');
+      event.target.classList.add('fa-eye-slash');
+    } else {
+      passwordInput.type = 'password';
+      event.target.classList.remove('fa-eye-slash');
+      event.target.classList.add('fa-eye');
+    }
+  };
+
+  const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+  togglePasswordIcons.forEach((icon) => {
+    icon.addEventListener('click', togglePassword);
+  });
+</script>
+
 </body>
 </html>
