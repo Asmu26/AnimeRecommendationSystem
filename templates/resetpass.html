@@ -18,19 +18,15 @@
 	}
 	</style>
 </head>
- <!-- reset pass -->
 
 <body>	  
 
 	{% include "nav3.html" %}
 
-{% block content %}
 <div class="login-box">
   <h1>Reset Password</h1>
   <form method="POST" action="">
     {% csrf_token %}
-    <input type="hidden" name="uidb64" value="{{ uidb64 }}">
-    <input type="hidden" name="token" value="{{ token }}">
     <label for="new_password1">New Password:</label>
     <input type="password" class="form-control" name="new_password1" id="new_password1" required>
     <label for="new_password2">Confirm New Password:</label>

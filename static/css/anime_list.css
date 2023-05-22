@@ -19,6 +19,7 @@ select {
   
   label {
     display: block;
+    color: white;
     font-weight: bold;
     margin-bottom: 10px;
   }
@@ -93,3 +94,44 @@ select {
     right: 0;
   }
   
+  
+.step-links a {
+  display: inline-block;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  color: #ffffff;
+  background-color: #301934;
+  margin: 0 5px;
+}
+
+.step-links a:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+}
+
+
+#nav {
+
+margin-right: 700px;
+}
+#navicon{
+margin-right: 150px;
+}
+
+.pagination {
+display: flex;
+justify-content: center;
+align-items: center;
+margin-top: 20px;
+}
+.previous_page_number{
+color:white;
+}
+
+.current-page {
+margin: 0 10px;
+color: white;
+font-weight: bold;
+font-size: 18px;
+}

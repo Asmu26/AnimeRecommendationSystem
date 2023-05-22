@@ -27,7 +27,9 @@
                 <a href="{% url 'anime_detail' a.id %}"> 
                   <img src="{{ a.img_url }}" alt="{{ a.title }}"></a>
                   <div class="anime-info">
+                    <div class="anime-con"> 
                       <h2>{{ a.title }}</h2>
+                    </div>
                   </div>
                 
               </div>
@@ -51,6 +53,24 @@
 			});
 		});
 	</script>
+  <div class="pagination">
+    <span class="step-links">
+        {% if anime.has_previous %}
+            <a href="?page=1">&laquo; first</a> {% comment %} Link to the first page {% endcomment %}
+            <a href="?page={{ anime.previous_page_number }}">previous</a> {% comment %} Link to the previous page {% endcomment %}
+        {% endif %}
+
+        <span class="current-page">
+            Page {{ anime.number }} of {{ anime.paginator.num_pages }}
+        </span>
+
+        {% if anime.has_next %}
+            <a href="?page={{ anime.next_page_number }}">next</a> {% comment %} Link to the next page {% endcomment %}
+            <a href="?page={{ anime.paginator.num_pages }}">last &raquo;</a> {% comment %} Link to the last page {% endcomment %}
+        {% endif %}
+    </span>
+  </div>
+</div>
 
     <footer>
     {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}

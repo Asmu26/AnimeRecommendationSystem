@@ -78,7 +78,6 @@ body {
     bottom: 0;
     right: 0;
 }
- 
 
 .step-links a {
   display: inline-block;
@@ -86,12 +85,12 @@ body {
   text-decoration: none;
   border-radius: 4px;
   color: #ffffff;
-  background-color: #4b0082;
+  background-color: #301934;
   margin: 0 5px;
 }
 
 .step-links a:hover {
-  background-color: #8a2be2;
+  background-color: rgba(0, 0, 0, 0.3);
   color: #ffffff;
 }
 

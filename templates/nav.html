@@ -10,7 +10,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-
 <div class="nav">
     <div class="nav-header">
       <div class="nav-title">
@@ -25,7 +24,7 @@
     <div class="nav-links">
       <a href="{% url 'aap' %}" >Home</a>
       <a href="{% url 'popularView' %}" >Popular</a>
-      <a href="/watchlist/" >WatchList</a>
+      <a href="{% url 'watchlist' "watching" %}" >WatchList</a>
       <a id="nav" href="{% url 'anime_list' %}" >Genre</a>
           {% comment %} <a id="navicon" href="#"><i class="fa fa-bell"></i></a> {% endcomment %}
       <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -82,8 +81,8 @@
     <div class="dropdown">
       <a href="#" class="profile-icon"><i class="fa fa-user"></i></a>
       <div class="dropdown-content">
-        <a href="#">Profile</a>
-        <a href="/watchlist/">WatchList</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'watchlist' "watching" %}">WatchList</a>
         <a href="{% url 'logout' %}">Logout</a>
           </div>
         </div>

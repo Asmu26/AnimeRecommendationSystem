@@ -127,13 +127,10 @@
           <img src="{{ anime.img_url }}" alt="{{ anime.title }}">
           <div class="anime-con"> 
               <h2>{{ anime.title }}</h2>
-              {% comment %} 
-                  create a comment block for a link to the anime detail page
-                  using the url() method to generate the URL with the anime ID
-              {% endcomment %}
+              
           </div>
           <!-- display the anime score -->
-          <p>Score: {{ anime.score }}</p>
+          <p><strong>Score: {{ anime.average_rating }}</strong></p>
       </div>
   {% endfor %}
 </div>
@@ -157,37 +154,38 @@
   </span>
 </div>
 <style>
+  
   .step-links a {
     display: inline-block;
     padding: 8px 16px;
     text-decoration: none;
     border-radius: 4px;
     color: #ffffff;
-    background-color: #4b0082;
+    background-color: #301934;
     margin: 0 5px;
   }
   
   .step-links a:hover {
-    background-color: #8a2be2;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #ffffff;
   }
-
+  
   .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
   }
   .previous_page_number{
-    color:white;
+  color:white;
   }
   
   .current-page {
-    margin: 0 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-  }  
-  
+  margin: 0 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  }
 </style>
 {% load static %}
 
@@ -212,7 +210,7 @@
         <h3>Quick Links</h3>
         <ul class="footer-links">
           <li><a href="{% url 'landing' %}">Home</a></li>
-          <li><a href="#">About Us</a></li>
+          <li><a href="{% url 'about' %}">About Us</a></li>
           <li><a href="#">Contact Us</a></li>
           <li><a href="#">Privacy Policy</a></li>
         </ul>

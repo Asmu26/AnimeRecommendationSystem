@@ -187,7 +187,7 @@ display: block;
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .profile-icon {
-background-color: rgba(0, 0, 0, 0.3);;
+background-color: rgba(0, 0, 0, 0.3);
 color: #fff;
 }
 

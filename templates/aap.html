@@ -23,7 +23,7 @@
               <h2>{{ anime.title }}</h2>
           </div>
           
-          <p>Score: {{ anime.score }}</p>
+          <p><strong>Score: {{ anime.average_rating }}</strong></p>
         </div>
       {% endfor %}
     </div>
@@ -45,21 +45,6 @@
           {% endif %}
       </span>
     </div>
-    <script>
-      const genreSelect = document.querySelector('#genre');
-      const animeCards = document.querySelectorAll('.anime-card');
-  
-      genreSelect.addEventListener('change', () => {
-        const selectedGenre = genreSelect.value.toLowerCase();
-        animeCards.forEach(card => {
-          if (selectedGenre === '' || card.dataset.genres.includes(selectedGenre)) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    </script>
   </body>
   <footer>
   {% include "footer.html" %} {% comment %} Include the footer template {% endcomment %}

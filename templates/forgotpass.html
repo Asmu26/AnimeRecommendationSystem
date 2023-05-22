@@ -30,12 +30,10 @@
 		  <input type="email" class="form-control" name="email" id="email" placeholder="Enter your registered email" required> <!-- creates an email input field -->
 		<input type="submit" value="Send Verification Code"> <!-- creates a submit button -->
 		<p class="text-center"><a href="{% url 'login' %}">Back to Login</a></p> <!-- creates a link to login page -->
+		{% if form.errors %}
+    		<p class="error-msg">{{ form.errors.email }}</p>
+  		{% endif %}
 	</form>
-	{% if messages %}
-	{% for message in messages %}
-	  <p class="error-msg">{{ message }}</p>
-	{% endfor %}
-  {% endif %}
 </div>
 </body>
 </html>

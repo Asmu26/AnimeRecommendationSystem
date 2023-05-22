@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth  import authenticate,  login, logout
 from jsonschema import ValidationError
-from .models import Episode, Video
+from .models import Episode
 from .csv_add import load
 from .models import *
 from django.http import JsonResponse
@@ -27,10 +27,7 @@ from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
-
-class ForgotPasswordForm(forms.Form):
-    email = forms.EmailField(label='Email')
-
+from django.contrib.auth.forms import PasswordResetForm
 
 def validate_email_address(value):
     try:
@@ -41,15 +38,16 @@ def validate_email_address(value):
 
 
 def recommend(genre, title):
-    model_data = Animedata.objects.filter(genre__icontains=genre).values()
-    data = pd.DataFrame(model_data)  # Convert queryset to a pandas DataFrame
+    genre_data = Animedata.objects.filter(genre__icontains=genre).values()
+    data = pd.DataFrame(genre_data)  # Convert queryset to a pandas DataFrame
     vectorizer = CountVectorizer(stop_words='english')
+    
     selected_cols = ['synopsis']
-    document_term_matrix = vectorizer.fit_transform(data[selected_cols].fillna('').apply(lambda x: ' '.join(x), axis=1))
-    n_features = document_term_matrix.shape[1]
+    data_matrix = vectorizer.fit_transform(data[selected_cols].fillna('').apply(lambda x: ' '.join(x), axis=1))
+    n_features = data_matrix.shape[1]
     n_components = min(n_features, 100)
     svd = TruncatedSVD(n_components=n_components)
-    svd_matrix = svd.fit_transform(document_term_matrix)
+    svd_matrix = svd.fit_transform(data_matrix)
     scaler = StandardScaler()
     num_attributes = scaler.fit_transform(data[['score']].fillna(0))
 
@@ -62,7 +60,7 @@ def recommend(genre, title):
         idx = df[df['title'] == title].index[0]
         sim_scores = list(enumerate(cosine_sim[idx]))
         sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-        sim_scores = sim_scores[1:11]
+        sim_scores = sim_scores[1:7]
         anime_indices = [i[0] for i in sim_scores]
         similar_anime = df[['title', 'id','img_url']].iloc[anime_indices]
         similar_anime_dict = similar_anime.to_dict('records')
@@ -109,6 +107,21 @@ def signup(request):
         if not re.search("[A-Z]", pass1):
             # If password does not contain an uppercase character, show error message and redirect to signup page
             messages.error(request, 'Password must contain at least one uppercase character')
+            return redirect('signup')
+
+        if not re.search("[0-9]", pass1):
+            # If password does not contain a number, show error message and redirect to signup page
+            messages.error(request, 'Password must contain at least one number')
+            return redirect('signup')
+
+        if not re.search("[!@#$%^&*()]", pass1):
+            # If password does not contain a special character, show error message and redirect to signup page
+            messages.error(request, 'Password must contain at least one special character (!@#$%^&*())')
+            return redirect('signup')
+
+        if len(pass1) < 8:
+            # If password is not at least 8 characters long, show error message and redirect to signup page
+            messages.error(request, 'Password must be at least 8 characters long')
             return redirect('signup')
 
         # Check if the email is valid
@@ -167,6 +180,9 @@ def userlogin(request):
     # If the request method is GET, display the login page
     return render(request, 'login.html')
 
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField(label='Email')
+
 def forgotpass(request):
     if request.method == 'POST':
         form = ForgotPasswordForm(request.POST)
@@ -175,8 +191,8 @@ def forgotpass(request):
             try:
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
-                # Display an error message if the email is not associated with an account
-                form.add_error('email', 'This email is not associated with any account.')
+                # Assign a custom error message to the email field
+                form.errors['email'] = 'This email is not associated with any account'
                 return render(request, 'forgotpass.html', {'form': form})
 
             # Generate a unique token and save it to the user's account
@@ -197,7 +213,6 @@ def forgotpass(request):
         form = ForgotPasswordForm()
     return render(request, 'forgotpass.html', {'form': form})
 
-from django.contrib.auth.forms import PasswordResetForm
 
 def reset_password(request, token):
     try:
@@ -223,7 +238,6 @@ def reset_password(request, token):
     return render(request, 'password_reset.html', {'form': form})
 
 
-
 def home(request):
     print(request.user)
     # If the user is authenticated, redirect them to the aap page
@@ -233,8 +247,6 @@ def home(request):
     else:
         return redirect('/landing')
 
-#def home(request):
-#    return render(request, 'home.html')
 
 def logoutuser(request):
     # Log the user out and redirect them to the home page
@@ -261,7 +273,7 @@ def popularView(request):
             # If no query parameter, retrieve all anime
             all_anime = Animedata.objects.all().order_by('-average_rating')
             
-        # Create a paginator object with 24 items per page
+        # Create a paginator object with 12 items per page
         paginator = Paginator(all_anime, 12) 
         # Get the page number from the URL parameter
         page_number = request.GET.get('page')
@@ -287,7 +299,7 @@ def aap(request):
             # If no query parameter, retrieve all anime
             all_anime = Animedata.objects.all()
             
-        # Create a paginator object with 24 items per page
+        # Create a paginator object with 12 items per page
         paginator = Paginator(all_anime, 12) 
         # Get the page number from the URL parameter
         page_number = request.GET.get('page')
@@ -384,7 +396,6 @@ def anime_detail(request, pk):
     return render(request, 'anime_detail.html', context)
 
 
-
 def csvadd(request):
     # This function loads data from a CSV file into the database
     load()
@@ -441,6 +452,9 @@ def anime_list(request):#genre
         anime = Animedata.objects.filter(genre__in=(selected_genre.split(',')))
     else:
         anime = Animedata.objects.all()
+    paginator = Paginator(anime, 24)
+    page_number = request.GET.get('page')
+    anime = paginator.get_page(1) if page_number is None else paginator.get_page(page_number)
     context = {'anime': anime, 'genres': genres, 'selected_genre': selected_genre}
     return render(request, 'anime_list.html', context)
 
@@ -449,7 +463,7 @@ def deletewatch(request, id):
     watchlist = get_object_or_404(WatchList, id=id)
     watchlist.delete()
     messages.success(request, 'Watchlist item deleted successfully!')
-    return redirect('watchlist')
+    return redirect(reverse('watchlist', args=[watchlist.status]))
 
 @login_required(login_url='/login/')
 def watching_view(request):
@@ -475,3 +489,14 @@ def dropped_view(request):
 def completed_view(request):
     watchlists = WatchList.objects.filter(status='Completed')
     return render(request, 'completed.html', {'watchlists': watchlists})
+
+def about(request):
+    return render(request, 'about.html')
+
+def resetpass(request):
+    return render(request, 'resetpass.html')
+
+@login_required(login_url='/login/')
+def profile(request):
+    user = request.user
+    return render(request, 'profile.html', {'user': user})

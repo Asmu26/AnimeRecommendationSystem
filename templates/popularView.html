@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>VinSmoke</title>
+	<title>Popular</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="{% static 'css/nav.css' %}">
   <link rel="stylesheet" href="{% static 'css/footer.css' %}">
@@ -24,7 +24,7 @@
               <h2>{{ anime.title }}</h2>
           </div>
           
-          <p>Score: {{ anime.score }}</p>
+          <p><strong>Score: {{ anime.average_rating }}</strong></p>
         </div>
       {% endfor %}
     </div>

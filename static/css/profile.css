@@ -1,0 +1,51 @@
+body {
+    font-family: "Roboto Mono", monospace;
+    text-align: center;
+    background-image: url("https://images4.alphacoders.com/976/thumb-1920-976013.jpg");
+    backdrop-filter: blur(15px);
+    background-color: #000000;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+  }
+
+.profile-container {
+    text-align: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  h1 {
+    font-size: 36px;
+    color: white;
+    margin-top: 30px;
+  }
+  
+  .user-icon {
+    font-size: 60px;
+    color: black;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+  
+  .text-container {
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 400px;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    text-align: justify;
+    color: aliceblue;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: white;
+  }
+  

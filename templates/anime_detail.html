@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>VinSmoke</title>
+	<title>Anime Details</title>
     <link rel="stylesheet" href="{% static 'css/details.css' %}">
     <link rel="stylesheet" href="{% static 'css/nav.css' %}">
 </head>
@@ -21,7 +21,7 @@
                 </div>
                 
                 {% if watchlist %}
-                    <a href="/watchlist/" class="fas fa-edit">Edit Watch List</a>
+                    <a href="{% url 'watchlist' "watching" %}" class="fas fa-edit">Edit Watch List</a>
                 {% else %}
                 <i class="fas fa-plus" onclick="show_status()"> Add to List
                     <span id="status"></span>
@@ -56,11 +56,7 @@
       </div>
       
 </body>
-<!-- {%for episode in episodes%}
-            <li>{{episode}}</li>
-            {%endfor%} -->
-            
-    <!--  watchlist -->
+
 <script>
     function show_status(){
         let status = document.getElementById('status');
@@ -149,73 +145,6 @@ const animeId = url.pathname.split('/')[2];
           submitRating(animeId, rating);
         });
       });
-      
-    {% comment %} const ratingContainer = document.querySelector(".rating-container");
-    const ratingForm = document.querySelector("#rating-form");
-    const ratingInput = document.querySelector("#rating-input");
-    const submitButton = document.querySelector("#submit-rating");
-    
-    // Disable the submit button until a rating is selected
-    submitButton.disabled = true;
-    
-    // Add event listener to enable the submit button when a rating is selected
-    ratingInput.addEventListener("input", () => {
-      submitButton.disabled = false;
-    });
-    
-    // Add event listener to submit the rating form on submission
-    ratingForm.addEventListener("submit", event => {
-      // Prevent the form from submitting
-      event.preventDefault();
-    
-      // Get the selected rating value
-      const rating = ratingInput.value;
-    
-      // Send an AJAX request to submit the rating
-      const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-      const animeId = ratingForm.dataset.animeId;
-      const url = `/submit_rating/${animeId}/${rating}/`;
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          // Update the average rating on the page
-          const averageRating = data.average_rating;
-          const averageRatingElement = document.querySelector("#average-rating");
-          if (averageRatingElement) {
-            averageRatingElement.textContent = `Average rating: ${averageRating.toFixed(1)}`;
-          }
-    
-          // Update the star ratings on the page
-          const fullStars = Math.round(averageRating);
-          const emptyStars = 5 - fullStars;
-          ratingContainer.innerHTML = "";
-          for (let i = 0; i < fullStars; i++) {
-            ratingContainer.innerHTML += '<i class="fas fa-star"></i>';
-          }
-          for (let i = 0; i < emptyStars; i++) {
-            ratingContainer.innerHTML += '<i class="far fa-star"></i>';
-          }
-    
-          // Disable the submit button
-          submitButton.disabled = true;
-    
-          // Show a success message
-          alert("Rating submitted successfully!");
-        })
-        .catch(error => {
-          console.error(error);
-          alert("An error occurred while submitting the rating. Please try again later.");
-    
-          // Enable the submit button
-          submitButton.disabled = false;
-        });
-    }); {% endcomment %}
     
    </script>
 <!--Recommendation part -->
